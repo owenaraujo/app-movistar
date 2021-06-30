@@ -10,7 +10,7 @@
           <!-- Topbar -->
           <nav
           style=""
-            class="navbar navbar-expand navbar-light bg-primary text-white topbar mb-4 static-top shadow "
+            class="navbar navbar-expand navbar-light bg-primary text-white topbar  static-top shadow "
           >
          
               <!-- Sidebar Toggle (Topbar) -->
@@ -64,11 +64,11 @@
           </nav>
 
           <!-- content  -->
-<div style=" overflow-y: auto ;height:74vh">
+<div style=" overflow-y: auto ;height:89vh " class="mt-2">
 
 
             <router-view></router-view>
-</div>
+
     
           <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -77,7 +77,7 @@
               </div>
             </div>
           </footer>
-          <!-- End of Footer -->
+          <!-- End of Footer --></div>
         </div>
         <!-- End of Content Wrapper -->
       </div>

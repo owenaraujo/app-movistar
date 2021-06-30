@@ -8,6 +8,16 @@ const routes = [
       component: () => import("../components/template/Index.vue"),
     },
     {
+      path: "/proveedores/add",
+      name: "proveedoresAdd",
+      component: () => import("../components/proveedores/Add.vue"),
+    },
+    {
+      path: "/proveedores/",
+      name: "proveedores",
+      component: () => import("../components/proveedores/List.vue"),
+    },
+    {
       path: "/productos/",
       name: "productos",
       component: () => import("../components/products/List.vue"),
@@ -18,7 +28,7 @@ const routes = [
       component: () => import("../components/products/Add.vue"),
     },
     {
-      path: "/clientes/",
+      path: "/clientes",
       name: "addClientes",
       component: () => import("../components/clients/List.vue"),
     },
@@ -30,12 +40,22 @@ const routes = [
     {
       path: "/clientes/add/",
       name: "clientes",
-      component: () => import("../components/clients/List.vue"),
+      component: () => import("../components/clients/Add.vue"),
     }, 
     {
       path: "/ventas/add",
       name: "addVentas",
-      component: () => import("../components/ventas/List.vue"),
+      component: () => import("../components/ventas/Add.vue"),
+    }, 
+    {
+      path: "/usuarios",
+      name: "usuarios",
+      component: () => import("../components/users/List.vue"),
+    }, 
+    {
+      path: "/usuarios/add",
+      name: "usuarioAdd",
+      component: () => import("../components/users/Add.vue"),
     }, 
 ]
 
