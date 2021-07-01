@@ -23,20 +23,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						
-								<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-                                <td>
-										<a href="editar_proveedor.php?id=<?php echo $data['codproveedor']; ?>" class="btn btn-success"><i class='fas fa-edit'></i> Editar</a>
-										<form action="eliminar_proveedor.php?id=<?php echo $data['codproveedor']; ?>" method="post" class="confirmar d-inline">
-											<button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i> </button>
-										</form>
-									</td>
-								</tr>
+						<List v-for="proveedor in proveedores" :proveedor="proveedor" :key="proveedor.id"/>
 					</tbody>
 
 				</table>
@@ -50,9 +37,18 @@
 </template>
 
 <script>
+import List from "./proveedoresList.vue"
+import { useStore} from 'vuex'
+import { computed } from '@vue/runtime-core'
 export default {
-
+components:{List},
+setup(){
+	const store = useStore()
+	const proveedores = computed(()=> store.state.proveedores)
+	return{proveedores}
 }
+}
+
 </script>
 
 <style>

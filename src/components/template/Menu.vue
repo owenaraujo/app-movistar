@@ -3,9 +3,9 @@
       <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 	<!-- Sidebar - Brand -->
-	<router-link class="sidebar-brand d-flex align-items-center justify-content-center" to="/">
+	<router-link style="height:9vh" class="sidebar-brand d-flex align-items-center justify-content-center" to="/">
 		<div class="sidebar-brand-icon rotate-n-15">
-			<img src="/img/logo.jpg" class="img-thumbnail">
+			<img src="/img/logo.png" class="img-thumbnail">
 		</div>
 		<div class="sidebar-brand-text mx-3">Vida Informático</div>
 	</router-link>
@@ -102,5 +102,8 @@ export default {
 </script>
 
 <style>
+
+
+
 
 </style>

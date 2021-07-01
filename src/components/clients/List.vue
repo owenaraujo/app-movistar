@@ -10,8 +10,8 @@
 	<div class="row">
 		<div class="col-lg-12">
 
-			<div class="table-responsive">
-				<table class="table table-striped table-bordered" id="table">
+			<div class="table-responsive list-scroll" >
+				<table class="table table-striped table-bordered " id="table" >
 					<thead class="thead-dark">
 						<tr>
 							<th>ID</th>
@@ -24,28 +24,18 @@
 					</thead>
 					<tbody>
 						
-								<tr>
-									<td>
-                                        </td>
-									<td>
-                                        </td>
-									<td>
-                                        </td>
-									<td>
-                                        </td>
-									<td>
-                                        
-                                    </td>
-									
-									<td>
-										<a href="editar_cliente.php?id=<?php echo $data['idcliente']; ?>" class="btn btn-success"><i class='fas fa-edit'></i></a>
-										<form action="eliminar_cliente.php?id=<?php echo $data['idcliente']; ?>" method="post" class="confirmar d-inline">
-											<button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i> </button>
-										</form>
-									</td>
-								</tr>
+							<Lista :cliente="cliente" v-for="cliente in clientes" :key="cliente.id"/>
 					</tbody>
-
+			<tfoot class="thead-dark">
+						<tr>
+							<th>ID</th>
+							<th>DNI</th>
+							<th>NOMBRE</th>
+							<th>TELEFONO</th>
+							<th>DIRECCIÓN</th>
+							<th>ACCIONES</th>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 
@@ -57,21 +47,29 @@
 </template>
 
 <script>
+import Lista from './clientesList.vue'
 import {useStore} from 'vuex'
+import { computed } from '@vue/runtime-core'
 export default {
+	components:{
+Lista
+	},
 setup(){
 	let store = useStore()
-
+const clientes = computed (()=>store.state.clientes)
 	const sendUrl = ()=>{
         const ruta = {ruta :"/clientes"}
         store.dispatch('sendUrl', ruta)
 
     }
-	return{sendUrl}
+	return{sendUrl, clientes}
 }
 }
 </script>
 
 <style>
-
+.list-scroll{
+	max-height:70vh;
+	overflow-y: scroll;
+}
 </style>

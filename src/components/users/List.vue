@@ -23,19 +23,7 @@
 					</thead>
 					<tbody>
 					
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td>
-										<a href="editar_usuario.php?id=<?php echo $data['idusuario']; ?>" class="btn btn-success"><i class='fas fa-edit'></i> Editar</a>
-										<form action="eliminar_usuario.php?id=<?php echo $data['idusuario']; ?>" method="post" class="confirmar d-inline">
-											<button class="btn btn-danger" type="submit"><i class='fas fa-trash-alt'></i> </button>
-										</form>
-									</td>
-								</tr>
+						<List v-for="cliente in clientes" :key="cliente.id" :cliente="cliente"/>
 					</tbody>
 
 				</table>
@@ -49,8 +37,17 @@
 </template>
 
 <script>
+import { computed } from '@vue/runtime-core'
+import { useStore} from 'vuex'
+import List from "./userList.vue"
 export default {
-
+	components:{List},
+	setup(){
+		const store = useStore()
+		const clientes = computed (()=> store.state.clientes)
+		return{clientes}
+	}
+ 
 }
 </script>
 

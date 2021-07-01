@@ -13,17 +13,17 @@ const routes = [
       component: () => import("../components/proveedores/Add.vue"),
     },
     {
-      path: "/proveedores/",
+      path: "/proveedores",
       name: "proveedores",
       component: () => import("../components/proveedores/List.vue"),
     },
     {
-      path: "/productos/",
+      path: "/productos",
       name: "productos",
       component: () => import("../components/products/List.vue"),
     },
     {
-      path: "/productos/add/",
+      path: "/productos/add",
       name: "addProductos",
       component: () => import("../components/products/Add.vue"),
     },
@@ -38,8 +38,8 @@ const routes = [
       component: () => import("../components/ventas/List.vue"),
     },
     {
-      path: "/clientes/add/",
-      name: "clientes",
+      path: "/clientes/add",
+      name: "clientesAdd",
       component: () => import("../components/clients/Add.vue"),
     }, 
     {
@@ -66,7 +66,7 @@ const router = createRouter({
   linkActiveClass: 'active'
 })
 router.beforeEach((to, from, next) => {
-  if (to.matched.length) console.warn('no match')
+  if (!to.matched.length) console.warn('no match')
   next()
 })
 

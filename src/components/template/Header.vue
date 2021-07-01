@@ -9,7 +9,7 @@
         <div id="content">
           <!-- Topbar -->
           <nav
-          style=""
+          style="max-height: 10vh"
             class="navbar navbar-expand navbar-light bg-primary text-white topbar  static-top shadow "
           >
          
@@ -64,14 +64,14 @@
           </nav>
 
           <!-- content  -->
-<div style=" overflow-y: auto ;height:89vh " class="mt-2">
+<div style=" overflow-y: auto ;height:89vh" class="mt-2">
 
 
             <router-view></router-view>
 
     
           <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
+            <div class="container my-auto" >
               <div class="copyright text-center my-auto">
                 <span>Copyright &copy; Vida Informatico</span>
               </div>
@@ -135,4 +135,7 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.input-group{align-items: center;}
+
+</style>
