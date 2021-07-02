@@ -1,55 +1,106 @@
 <template>
   <div>
-      <div class="container-fluid">
+    <div class="container-fluid">
+      <!-- Page Heading -->
+      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
+        <router-link to="/productos" class="btn btn-primary"
+          >Regresar</router-link
+        >
+      </div>
 
-   <!-- Page Heading -->
-   <div class="d-sm-flex align-items-center justify-content-between mb-4">
-     <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
-     <router-link to="/productos" class="btn btn-primary">Regresar</router-link>
-   </div>
+      <!-- Content Row -->
+      <div class="row">
+        <div class="col-lg-6 m-auto">
+          <div  autocomplete="off">
+            <div class="form-group">
+              <label>Proveedor</label>
 
-   <!-- Content Row -->
-   <div class="row">
-     <div class="col-lg-6 m-auto">
-       <form action="" method="post" autocomplete="off">
-        
-         <div class="form-group">
-           <label>Proveedor</label>
-          
-           <select id="proveedor" name="proveedor" class="form-control">
-            
-                 <option value="<?php echo $proveedor['codproveedor']; ?>"></option>
-            
-           </select>
-         </div>
-         <div class="form-group">
-           <label for="producto">Producto</label>
-           <input type="text" placeholder="Ingrese nombre del producto" name="producto" id="producto" class="form-control">
-         </div>
-         <div class="form-group">
-           <label for="precio">Precio</label>
-           <input type="text" placeholder="Ingrese precio" class="form-control" name="precio" id="precio">
-         </div>
-         <div class="form-group">
-           <label for="cantidad">Cantidad</label>
-           <input type="number" placeholder="Ingrese cantidad" class="form-control" name="cantidad" id="cantidad">
-         </div>
-         <input type="submit" value="Guardar Producto" class="btn btn-primary">
-       </form>
-     </div>
-   </div>
+              <select   
+              :class="{'is-invalid' : producto.proveedor_id=== ''}" 
+              
+              id="proveedor" v-model="producto.proveedor_id" name="proveedor" class="form-control">
+                <option v-for="proveedor in proveedores" :key="proveedor.id"
+                  :value="proveedor.id"
+                >{{proveedor.nombre}}</option>
+              </select>
+            </div>
+            <div v-for="(item, index) of form" :key="index">
+              <label :for="item.valor">{{ item.valor }}</label>
+              <input 
+              :class="{'is-invalid' : producto[item.valor]=== ''}" 
+              v-if="!item.number"
+                v-model="producto[item.valor]"
+                type="text"
+                :placeholder="item.valor"
+                :id="item.valor"
+                class="form-control"
+              />
+              <input v-if="item.number"
+              :class="{'is-invalid' : producto[item.valor]=== ''}" 
+              
+                v-model.number="producto[item.valor]"
+                type="Number"
+                :placeholder="item.valor"
+                :id="item.valor"
+                class="form-control"
+              />
+            </div>
 
-
- </div>
+            <button
+              @click="sendProduct()"
+              value=""
+              class="btn btn-primary"
+            > Guardar Producto </button>
+          </div>
+        </div>
+      </div>
+      {{ producto }}
+    </div>
   </div>
 </template>
 
 <script>
+import { ref } from "@vue/reactivity";
+import {  useStore } from 'vuex';
+import { computed } from '@vue/runtime-core';
 export default {
+  setup() {
+    const store = useStore()
+    const proveedores = computed(()=> store.state.productos)
+    const form = [
+      { valor :"nombre"},
+      { valor :"marca"},
+      { valor :"modelo"},
+      { valor :"descripcion"},
+      { valor :"cantidad", number : true},
+      { valor :"precio", number: true},
+      { valor :"codigo"},
+      { valor :"iva", number: true},
+    ];
+    const nombre = ref("");
+    let producto = ref({ 
+      proveedor_id : null,
+      nombre: null
+      });
+    
+    const sendProduct = function() {
+     // if(!producto.value.proveedor_id){ producto.value.proveedor_id = "" ;return} 
+      if(!producto.value.nombre){ producto.value.nombre = "" ;return} 
+      if(!producto.value.marca){ producto.value.marca = "" ;return} 
+      if(!producto.value.modelo){ producto.value.modelo = "" ;return} 
+      if(!producto.value.descripcion){ producto.value.descripcion = "" ;return} 
+      if(!producto.value.cantidad){ producto.value.cantidad = "" ;return} 
+      if(!producto.value.precio){ producto.value.precio = "" ;return} 
+      if(!producto.value.codigo){ producto.value.codigo = "" ;return} 
+console.log(producto.value);
 
-}
+     store.dispatch('saveProduct',  producto.value) 
+      producto.value = {proveedor_id: null}
+    }
+    return { producto, form, nombre, sendProduct, proveedores };
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

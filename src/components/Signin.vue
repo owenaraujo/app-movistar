@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+{{usuarios[0]}}
     <!-- Outer Row -->
     <div class="row justify-content-center">
       {{ usuario }}
@@ -29,7 +30,7 @@
                     <div class="form-group">
                       <label for="">Contraseña</label>
                       <input
-                        v-model="usuario.username"
+                        v-model="usuario.password"
                         type="password"
                         class="form-control"
                         placeholder="Contraseña"
@@ -58,14 +59,16 @@
 import { ref } from '@vue/reactivity';
 
 import { useStore } from "vuex";
+import { computed } from '@vue/runtime-core';
 export default {
   setup() {
     const store = useStore();
     const usuario = ref({ password: "asd", username: "dasd" });
+    const usuarios = computed (()=> store.state.usuarios)
     const loger = () => {
       store.dispatch("login", usuario.value);
     };
-    return { loger, usuario };
+    return { loger, usuario, usuarios };
   },
 };
 </script>
