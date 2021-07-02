@@ -13,8 +13,7 @@
       <div class="row">
         <div class="col-lg-6 m-auto">
           <div  autocomplete="off">
-            <div class="form-group">
-              <label>Proveedor</label>
+            <div class="form-group form-floating mb-3">
 
               <select   
               :class="{'is-invalid' : producto.proveedor_id=== ''}" 
@@ -24,8 +23,9 @@
                   :value="proveedor.id"
                 >{{proveedor.nombre}}</option>
               </select>
+              <label>Proveedor</label>
             </div>
-            <div v-for="(item, index) of form" :key="index">
+            <div class=" mb-2" v-for="(item, index) of form" :key="index">
               <label :for="item.valor">{{ item.valor }}</label>
               <input 
               :class="{'is-invalid' : producto[item.valor]=== ''}" 
@@ -64,6 +64,7 @@
 import { ref } from "@vue/reactivity";
 import {  useStore } from 'vuex';
 import { computed } from '@vue/runtime-core';
+//import '../../../public/css/bootstrap5.css'
 export default {
   setup() {
     const store = useStore()
@@ -103,4 +104,3 @@ console.log(producto.value);
 };
 </script>
 
-<style></style>
