@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container-fluid">
+    <div class="container-fluid mt-2">
       <!-- Page Heading -->
       <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
@@ -15,6 +15,7 @@
           <div  autocomplete="off">
             <div class="form-group form-floating mb-3">
 
+              <label>Proveedor</label>
               <select   
               :class="{'is-invalid' : producto.proveedor_id=== ''}" 
               
@@ -23,7 +24,6 @@
                   :value="proveedor.id"
                 >{{proveedor.nombre}}</option>
               </select>
-              <label>Proveedor</label>
             </div>
             <div class=" mb-2" v-for="(item, index) of form" :key="index">
               <label :for="item.valor">{{ item.valor }}</label>
@@ -55,7 +55,6 @@
           </div>
         </div>
       </div>
-      {{ producto }}
     </div>
   </div>
 </template>

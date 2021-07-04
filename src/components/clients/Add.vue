@@ -9,52 +9,34 @@
     <!-- Content Row -->
     <div class="row">
       <div class="col-lg-6 m-auto">
-        <form action="" method="post" autocomplete="off">
+        <form  autocomplete="off">
           <div class="form-group">
-            <label for="dni">Dni</label>
-            <input
-              type="number"
-              placeholder="Ingrese dni"
-              name="dni"
-              id="dni"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input
-              type="text"
-              placeholder="Ingrese Nombre"
-              name="nombre"
-              id="nombre"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group">
-            <label for="telefono">Teléfono</label>
-            <input
-              type="number"
-              placeholder="Ingrese Teléfono"
-              name="telefono"
-              id="telefono"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group">
-            <label for="direccion">Dirección</label>
-            <input
-              type="text"
-              placeholder="Ingrese Direccion"
-              name="direccion"
-              id="direccion"
-              class="form-control"
-            />
-          </div>
-          <input
+             <div v-for="item in form" :key="item" class="form-floating">
+              <label :for="item.value">{{ item.value }}</label>
+              <input v-if="item.number"
+                v-model.number="newCliente[item.value]" 
+                :class="{'is-invalid' : newCliente[item.value] === ''}"
+                type="number"
+                :placeholder="'Ingrese ' + item.value"
+                :id="item.value"
+                class="form-control"
+              />
+              <input v-else
+                v-model="newCliente[item.value]" 
+                :class="{'is-invalid' : newCliente[item.value] === ''}"
+                type="text"
+                :placeholder="'Ingrese ' + item.value"
+                :id="item.value"
+                class="form-control"
+              />
+            </div>
+            </div>
+          <button
             type="submit"
-            value="Guardar Cliente"
+            v-if="!newCliente.boton"
+           @click.prevent="save()" 
             class="btn btn-primary"
-          />
+          >Guardar Cliente</button>
         </form>
       </div>
     </div>
@@ -62,15 +44,37 @@
 </template>
 
 <script>
-import { computed } from "@vue/runtime-core";
+import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 export default {
   setup() {
+   let form = [
+     {value : 'dni',number: true},
+     { value:'nombre'},
+     { value:'apellido'},
+      {value:'telefono', number: true},
+       {value: 'direccion'}
+       ] 
     let store = useStore();
+let newCliente = ref({
+  dni: null, nombre: null, telefono: null, direccion : null, boton: false
+}) 
+const save = ()=>{
 
+  let value = newCliente.value
+ if(!value.dni) return value.dni = '';
+ if(!value.nombre) return value.nombre = '';
+ if(!value.telefono) return value.telefono = '';
+ if(!value.direccion) return value.direccion = '';
+ newCliente.value.boton = true
+ console.log(value);
+ newCliente.value = {}
+ newCliente.value.boton = false
+
+}
     const ruta = computed(() => store.state.linkclientes);
     return {
-      ruta,
+      ruta, newCliente, form, save
     };
   },
 };

@@ -14,9 +14,9 @@
           >
          
               <!-- Sidebar Toggle (Topbar) -->
-            <button
+            <button @click="cambiarSidebar"
               id="sidebarToggleTop"
-              class="btn btn-link d-md-none rounded-circle mr-3"
+              class="btn btn-link text-white d-md-none mr-1"
             >
               <i class="fa fa-bars"></i>
             </button>
@@ -64,7 +64,7 @@
           </nav>
 
           <!-- content  -->
-<div style=" overflow-y: auto ;height:89vh" class="mt-2">
+<div style=" overflow-y: auto ;height:90vh" class="scrollbar-light-blue">
 
 
             <router-view></router-view>
@@ -73,7 +73,7 @@
           <footer class="sticky-footer bg-white">
             <div class="container my-auto" >
               <div class="copyright text-center my-auto">
-                <span>Copyright &copy; Vida Informatico</span>
+                <span>Copyright &copy; Serious Programming</span>
               </div>
             </div>
           </footer>
@@ -130,12 +130,36 @@
 
 <script>
 import Menu from "./Menu.vue";
+import{useStore} from 'vuex' 
 export default {
   components: { Menu },
+setup(){
+  const store = useStore() 
+  const cambiarSidebar = ()=>{
+    store.dispatch('activeMenu')
+  }
+
+return{ cambiarSidebar}}
+
 };
 </script>
 
 <style scoped>
 .input-group{align-items: center;}
+.scrollbar-light-blue::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
 
+.scrollbar-light-blue::-webkit-scrollbar {
+  width: 10px;
+  background-color: #f5f5f5;
+}
+
+.scrollbar-light-blue::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+  background-color: #4e73df;
+}
 </style>

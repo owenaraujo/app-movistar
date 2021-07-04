@@ -1,7 +1,11 @@
 import { createStore } from "vuex";
+import axios from 'axios'
 export default createStore({
   state: {
+    api: 'http://localhost:3000/api',
+    sidebars: false,
     logged: true,
+    token: null,
     linkclientes: "/clientes",
     usuarios: [
       {
@@ -32,16 +36,7 @@ export default createStore({
         username: "usuario",
       },
     ],
-    proveedores: [
-      { nombre: "cliente", id: 1 },
-      { nombre: "cliente", id: 2 },
-      { nombre: "cliente", id: 3 },
-      { nombre: "cliente", id: 4 },
-      { nombre: "cliente", id: 5 },
-      { nombre: "cliente", id: 6 },
-      { nombre: "cliente", id: 7 },
-      { nombre: "cliente", id: 8 },
-    ],
+    proveedores: [],
     usuario: {},
     ventas: [],
     clientes: [
@@ -57,12 +52,15 @@ export default createStore({
     productos: [],
   },
   mutations: {
-    logear(state, payload) {
-      //state.logged = true;
-      state.usuarios.filter((item) => {
-        if (item._id === payload._id) item.password = 0;
-      });
-      state.usuario = payload;
+    saveProveedores(state,payload){
+
+state.proveedores = []
+state.proveedores = payload
+    },
+    logear(state,payload) {
+      state.logged = true;
+     state.token= payload.data
+     console.log(state.token)
     },
     cambiarRuta(state, ruta) {
       state.linkclientes = ruta.ruta;
@@ -70,20 +68,28 @@ export default createStore({
     agregar(state, payload) {
       state.productos.push(payload);
     },
+    updateProveedor(state ,payload){
+
+state.proveedores.map(item=>item._id === payload ?item.status =  !item.status:0)
+    }
   },
   actions: {
+    proveedorStatus({commit}, id){
+commit('updateProveedor', id)
+    },
+    activeMenu({state}){
+      state.sidebars= !state.sidebars
+    },
     sendUrl({ commit }, ruta) {
       commit("cambiarRuta", ruta);
     },
-    login({ state, commit }, usuario) {
-      const data = state.usuarios.filter((item) =>
-        item.username === usuario.username ? item : false
-      );
-      let resultado = data.length > 0 ? data[0] : false;
-      if (!resultado) return;
-      resultado.password === usuario.password
-        ? commit("logear", resultado)
-        : console.log("no funciona");
+    async getProveedores({state, commit}){
+const {data}= await axios.get(`${state.api}/proveedores`)
+commit('saveProveedores', data)    
+},
+    login({commit }, data) {
+        data.status? commit("logear", data)
+        : console.log(data);
     },
     saveProduct({ commit, state }, producto) {
       const status = state.productos.filter((item) => {

@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
-{{usuarios[0]}}
+  <div style=" 
+     overflow-y: scroll;
+    height: 100vh;" class="">
     <!-- Outer Row -->
-    <div class="row justify-content-center">
-      {{ usuario }}
+    <div class=" container mx-auto row justify-content-center">
       <div class="col-xl-10 col-lg-12 col-md-9">
         <div class="card o-hidden border-0 shadow-lg my-5">
           <div class="card-body p-0">
@@ -57,7 +57,7 @@
 
 <script>
 import { ref } from '@vue/reactivity';
-
+import axios from 'axios'
 import { useStore } from "vuex";
 import { computed } from '@vue/runtime-core';
 export default {
@@ -65,8 +65,10 @@ export default {
     const store = useStore();
     const usuario = ref({ password: "asd", username: "dasd" });
     const usuarios = computed (()=> store.state.usuarios)
-    const loger = () => {
-      store.dispatch("login", usuario.value);
+    const loger =async () => {
+      console.log(usuario.value);
+const {data} = await axios.post('http://localhost:3000/api/usuarios/login', usuario.value)
+store.dispatch("login", data);
     };
     return { loger, usuario, usuarios };
   },

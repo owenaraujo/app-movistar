@@ -13,8 +13,7 @@
 				<table class="table table-striped table-bordered" id="table">
 					<thead class="thead-dark">
 						<tr>
-							<th>ID</th>
-							<th>RUC</th>
+							<th>RIF</th>
 							<th>PROVEEDOR</th>
 							<th>TELEFONO</th>
 							<th>DIRECCION</th>
@@ -23,7 +22,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<List v-for="proveedor in proveedores" :proveedor="proveedor" :key="proveedor.id"/>
+						<List v-for="proveedor in proveedores" :proveedor="proveedor" :key="proveedor._id"/>
 					</tbody>
 
 				</table>
@@ -44,6 +43,10 @@ export default {
 components:{List},
 setup(){
 	const store = useStore()
+	function get(){
+		store.dispatch('getProveedores')
+	}
+	get()
 	const proveedores = computed(()=> store.state.proveedores)
 	return{proveedores}
 }

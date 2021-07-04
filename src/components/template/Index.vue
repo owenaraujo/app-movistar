@@ -11,7 +11,7 @@
 	<div class="row">
 
 		<!-- Earnings (Monthly) Card Example -->
-		<a class="col-xl-3 col-md-6 mb-4" href="lista_usuarios.php">
+		<router-link class="col-xl-3 col-md-6 mb-4" to="/usuarios">
 			<div class="card border-left-primary shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">
@@ -25,10 +25,10 @@
 					</div>
 				</div>
 			</div>
-		</a>
+		</router-link>
 
 		<!-- Earnings (Monthly) Card Example -->
-		<a class="col-xl-3 col-md-6 mb-4" href="">
+		<router-link class="col-xl-3 col-md-6 mb-4" to="/clientes">
 			<div class="card border-left-success shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">
@@ -42,10 +42,10 @@
 					</div>
 				</div>
 			</div>
-		</a>
+		</router-link>
 
 		<!-- Earnings (Monthly) Card Example -->
-		<a class="col-xl-3 col-md-6 mb-4">
+		<router-link class="col-xl-3 col-md-6 mb-4" to="/productos">
 			<div class="card border-left-info shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">
@@ -68,10 +68,10 @@
 					</div>
 				</div>
 			</div>
-		</a>
+		</router-link>
 
 		<!-- Pending Requests Card Example -->
-		<a class="col-xl-3 col-md-6 mb-4" href="">
+		<router-link class="col-xl-3 col-md-6 mb-4" to="/ventas">
 			<div class="card border-left-warning shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">
@@ -85,7 +85,7 @@
 					</div>
 				</div>
 			</div>
-		</a>
+		</router-link>
 	</div>
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
