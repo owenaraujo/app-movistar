@@ -22,6 +22,7 @@
             </button>
             <div class="input-group">
               <h6>Sistema de Venta</h6>
+
               <p class="ml-auto"><strong>Venezuela, </strong></p>
             </div>
 
@@ -40,23 +41,33 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  <span class="mr-2 d-none d-lg-inline small text-white">icono</span>
+                  <span class="mr-2 d-none d-lg-inline small text-white">
+                    <i class="fas fa-user"></i></span>
                 </a>
                 <!-- Dropdown - User Information -->
                 <div
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                   aria-labelledby="userDropdown"
                 >
+                <div class="d-flex align-items-center ml-2" >
+                  
+                  <input v-model="search" type="search" class="pr-1 pl-1 w-75 form-control form-control-sm " />
+                 <i class="ml-2 fas fa-search"></i>
+                </div>
+                 <div class="dropdown-divider"></div>
+
+                  
                   <a class="dropdown-item" href="#">
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400">uisuario</i>
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-600"></i>{{usuario.username}}
                   </a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="salir.php">
+                  <a class="dropdown-item" @click="salir()">
                     <i
-                      class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
+                      class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-600"
                     ></i>
                     Salir
                   </a>
+                 
                 </div>
               </li>
             </ul>
@@ -67,7 +78,7 @@
 <div style=" overflow-y: auto ;height:90vh" class="scrollbar-light-blue">
 
 
-            <router-view></router-view>
+            <router-view :param='search'></router-view>
 
     
           <footer class="sticky-footer bg-white">
@@ -131,15 +142,22 @@
 <script>
 import Menu from "./Menu.vue";
 import{useStore} from 'vuex' 
+import {computed, ref} from '@vue/runtime-core';
 export default {
   components: { Menu },
 setup(){
   const store = useStore() 
+  let usuario = computed(()=> store.state.usuario)
+  const salir = ()=>{
+    store.dispatch('logout')
+  }
+  const search =ref('')
   const cambiarSidebar = ()=>{
     store.dispatch('activeMenu')
   }
 
-return{ cambiarSidebar}}
+
+return{ search,cambiarSidebar,salir, usuario}}
 
 };
 </script>

@@ -1,43 +1,70 @@
 <template>
-<tr >
-                <td>{{producto.nombre}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
+  <tr>
+    <td>{{ producto.codigo }}</td>
+    <td>{{ producto.nombre }}</td>
+    <td>{{ producto.precio }}</td>
+    <td>{{ producto.cantidad }}</td>
 
-                <td>
-                  <a
-                    href=""
-                    class="btn btn-primary"
-                    ><i class="fas fa-audio-description"></i
-                  ></a>
+    <td>
+      <router-link :to="'/productos/add/cantidad?'+ producto._id" class="btn btn-primary"
+        ><i class="fas fa-audio-description"></i
+      ></router-link>
 
-                  <a
-                    href="
-                    "
-                    class="btn btn-success"
-                    ><i class="fas fa-edit"></i
-                  ></a>
+      <router-link
+        :to="'/productos/add?' + producto._id"
+        class="btn btn-success"
+        ><i class="fas fa-edit"></i
+      ></router-link>
 
-                  <form
-                    action=""
-                    method="post"
-                    class="confirmar d-inline"
-                  >
-                    <button class="btn btn-danger" type="submit">
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
-                  </form>
-                </td>
-              </tr>
+      <div class="confirmar d-inline">
+        <button
+          v-show="producto.status"
+          @click="desactivarProducto(producto._id)"
+          class="btn btn-danger"
+        >
+          <i class="fas fa-trash-alt"></i>
+        </button>
+
+        <button
+          v-show="!producto.status"
+          @click="activarProducto(producto._id)"
+          class="btn btn-success"
+        >
+          <i class="fas fa-check"></i>
+        </button>
+      </div>
+    </td>
+  </tr>
 </template>
 
 <script>
+import { createToast } from "mosha-vue-toastify";
+import axios from "axios";
+import { useStore } from "vuex";
+import { computed, ref } from "@vue/runtime-core";
+
 export default {
-props:['producto']
-}
+  props: ["producto"],
+  setup(props) {
+    let producto = ref(props.producto);
+    const store = useStore();
+    const toask = computed(() => store.state.toask);
+    const api = computed(() => store.state.api);
+    async function activarProducto(id) {
+      const { data } = await axios.delete(
+        `${api.value}/productos/activar/${id}`
+      );
+      producto.value.status = true;
+      createToast(data.value, toask.value.success);
+    }
+    async function desactivarProducto(id) {
+      const { data } = await axios.delete(`${api.value}/productos/${id}`);
+      producto.value.status = false;
+      createToast(data.value, toask.value.danger);
+    }
+    return { activarProducto, desactivarProducto };
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -43,10 +43,9 @@ export default {
 components:{List},
 setup(){
 	const store = useStore()
-	function get(){
+	
 		store.dispatch('getProveedores')
-	}
-	get()
+	
 	const proveedores = computed(()=> store.state.proveedores)
 	return{proveedores}
 }

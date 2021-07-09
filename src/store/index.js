@@ -1,66 +1,79 @@
 import { createStore } from "vuex";
 import axios from 'axios'
+import { createToast } from "mosha-vue-toastify";
 export default createStore({
   state: {
+    search: 'hola',
+    parametro: 'coca',
+    toask: {
+danger:{
+  hideProgressBar: false,
+  showIcon: true,
+  position: 'bottom-left',
+  type: 'danger',
+  timeout: 3000,
+  transition: 'bounce'
+  },
+  warning:{
+    hideProgressBar: false,
+    showIcon: true,
+    position: 'bottom-left',
+    type: 'warning',
+  timeout: 3000,
+
+    transition: 'bounce'
+    },
+    success: {
+      hideProgressBar: false,
+      showIcon: true,
+      position: 'bottom-left',
+      timeout:3000 ,
+      type: 'success',
+      transition: 'bounce'
+      }
+    },
     api: 'http://localhost:3000/api',
     sidebars: false,
-    logged: true,
+    logged: false,
     token: null,
     linkclientes: "/clientes",
-    usuarios: [
-      {
-        _id: "60b1500767c4e91340a2d78a",
-        status: true,
-        nombre: "admin",
-        documento: "123456",
-        correo: "default@gmail.com",
-        password: "1234",
-        username: "admin",
-      },
-      {
-        _id: "60b1500767c4e91340a2d78b",
-        status: true,
-        nombre: "vendedor",
-        documento: "123456",
-        correo: "default@gmail.com",
-        password: "1234",
-        username: "vendedor",
-      },
-      {
-        _id: "60b1500767c4e91340a2d78c",
-        status: true,
-        nombre: "usuario",
-        documento: "123456",
-        correo: "default@gmail.com",
-        password: "1234",
-        username: "usuario",
-      },
-    ],
+    usuarios: null,
     proveedores: [],
     usuario: {},
     ventas: [],
     clientes: [
-      { nombre: "cliente", id: 1 },
-      { nombre: "cliente", id: 2 },
-      { nombre: "cliente", id: 3 },
-      { nombre: "cliente", id: 4 },
-      { nombre: "cliente", id: 5 },
-      { nombre: "cliente", id: 6 },
-      { nombre: "cliente", id: 7 },
-      { nombre: "cliente", id: 8 },
+     
     ],
     productos: [],
   },
   mutations: {
+    saveProductos(state, payload){
+      state.productos = payload
+    },
     saveProveedores(state,payload){
 
 state.proveedores = []
 state.proveedores = payload
     },
-    logear(state,payload) {
-      state.logged = true;
-     state.token= payload.data
-     console.log(state.token)
+    async verifyUser(state){
+if(localStorage.token && localStorage.id){
+  state.token = localStorage.token
+  const {data} = await axios.get(`${state.api}/usuarios/${localStorage.id}`)
+  state.usuario = data
+  state.logged = true
+}
+    },
+   async logear(state,payload) {
+      const {data} = await axios.get(`${state.api}/usuarios/${payload.usuario}`)
+      state.usuario = data
+     state.token= payload.valueS
+     localStorage.token= payload.value
+     localStorage.id =payload.usuario
+     createToast ( `bienvenido ${data.username}`,state.toask.success )
+state.logged= true
+    },
+    saveClientes(state, payload){
+      state.clientes = payload
     },
     cambiarRuta(state, ruta) {
       state.linkclientes = ruta.ruta;
@@ -74,6 +87,10 @@ state.proveedores.map(item=>item._id === payload ?item.status =  !item.status:0)
     }
   },
   actions: {
+    async getProductos({commit, state}){
+      const {data}= await axios.get(`${state.api}/productos`)
+      commit('saveProductos', data)
+    },
     proveedorStatus({commit}, id){
 commit('updateProveedor', id)
     },
@@ -91,7 +108,26 @@ commit('saveProveedores', data)
         data.status? commit("logear", data)
         : console.log(data);
     },
-    saveProduct({ commit, state }, producto) {
+    async getClientes({state, commit}){
+      try {
+        if(state.clientes.length != 0) return
+        const {data} = await axios.get(`${state.api}/clientes`)
+        commit('saveClientes', data)
+
+      } catch (error) {
+        createToast('no hay conexion con el servidor')
+      }
+    },
+    verifyLocalstorage({commit }) {
+        commit("verifyUser")
+            },
+            logout ({state}){
+              state.logged = false
+              createToast('hasta pronto!!!') 
+             delete localStorage.token
+             delete localStorage.id
+            }
+,    saveProduct({ commit, state }, producto) {
       const status = state.productos.filter((item) => {
         console.log(producto.modelo);
         return item.modelo === producto.modelo ? item : false;

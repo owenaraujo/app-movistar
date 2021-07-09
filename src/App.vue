@@ -17,7 +17,8 @@ import Header from "./components/template/Header.vue";
 export default {
   components: { Signin, Header },
   setup() {
-    const store = useStore();
+    const store = useStore()
+    store.dispatch('verifyLocalstorage')
     const logged = computed(() => store.state.logged);
     return { logged };
   },

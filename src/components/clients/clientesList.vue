@@ -1,14 +1,15 @@
 <template>
   <tr>
-    <td>{{ cliente.id }}</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>{{ index  +1}}</td>
+    <td>{{cliente.dni}}</td>
+    <td>{{cliente.nombre}}</td>
+    <td>{{cliente.telefono}}</td>
+    <td>{{cliente.direccion}}</td>
+    
 
     <td class="">
-      <router-link to="">
-        <button class="btn btn-success mr-2 mt-2" type="submit">
+      <router-link :to="'/clientes/add?'+cliente._id">
+        <button class="btn btn-success mr-2 mt-2">
           <i class="fas fa-edit"></i>
         </button>
       </router-link>
@@ -22,7 +23,7 @@
 
 <script>
 export default {
-  props: ["cliente"],
+  props: ["cliente", 'index'],
 };
 </script>
 

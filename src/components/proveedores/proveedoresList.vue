@@ -1,10 +1,12 @@
 <template>
-  <tr>
+  <tr v-if="proveedor.nombre.toLowerCase().indexOf(parametro.toLowerCase()) !== -1||
+  proveedor.rif.toLowerCase().indexOf(parametro.toLowerCase()) !== -1">
     <td>{{ proveedor.rif }}</td>
     <td>{{ proveedor.nombre }}</td>
     <td>{{ proveedor.telefono }}</td>
     <td>{{ proveedor.direccion }}</td>
     <td>
+      {{parametro}}
       <router-link
         :to="'/proveedores/add?' + proveedor._id"
         class="btn btn-success"
@@ -33,21 +35,35 @@
 
 <script>
 import axios from "axios";
+import {createToast  } from 'mosha-vue-toastify'
 import { useStore } from "vuex";
 import { computed } from "@vue/runtime-core";
 export default {
+ 
   setup() {
+     const toask= {
+hideProgressBar: false,
+showIcon: true,
+position: 'top-left',
+type: 'danger',
+transition: 'zoom'
+}
     const store = useStore();
     const api = computed(() => store.state.api);
     const desactivarProveedor = async (id) => {
-      await axios.delete(`${api.value}/proveedores/${id}`);
+     const {data}= await axios.delete(`${api.value}/proveedores/${id}`);
       store.dispatch("proveedorStatus", id);
+    createToast(data.data,toask)
+
     };
     const activarProveedor = async (id) => {
-      await axios.delete(`${api.value}/proveedores/activate/${id}`);
+     const {data}= await axios.delete(`${api.value}/proveedores/activate/${id}`);
       store.dispatch("proveedorStatus", id);
+    createToast(data.data,toask)
     };
+    const parametro = computed(()=> store.state.parametro)
     return {
+      parametro,
       desactivarProveedor,
       activarProveedor,
     };

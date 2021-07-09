@@ -60,15 +60,28 @@ import { ref } from '@vue/reactivity';
 import axios from 'axios'
 import { useStore } from "vuex";
 import { computed } from '@vue/runtime-core';
+import { createToast } from 'mosha-vue-toastify';
 export default {
   setup() {
     const store = useStore();
+    let toast = computed(()=>store.state.toask)
     const usuario = ref({ password: "asd", username: "dasd" });
     const usuarios = computed (()=> store.state.usuarios)
     const loger =async () => {
-      console.log(usuario.value);
+      try {
+        
 const {data} = await axios.post('http://localhost:3000/api/usuarios/login', usuario.value)
-store.dispatch("login", data);
+if(data.status){ return store.dispatch("login", data)
+
+
+}
+if(data.status === null){
+  createToast(data.value, toast.value.warning)
+} if(data.status === false)createToast(data.value , toast.value.danger)
+
+      } catch (error) {
+        createToast('no hay acceso al servidor')
+      }
     };
     return { loger, usuario, usuarios };
   },

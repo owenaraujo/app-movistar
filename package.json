@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "jquery": "^3.6.0",
     "jspdf": "^2.3.1",
+    "mosha-vue-toastify": "^1.0.13",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

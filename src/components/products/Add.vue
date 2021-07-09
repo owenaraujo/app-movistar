@@ -12,16 +12,15 @@
       <!-- Content Row -->
       <div class="row">
         <div class="col-lg-6 m-auto">
-          <div  autocomplete="off">
-            <div class="form-group form-floating mb-3">
-
+          <form  autocomplete="off">
+            <div  class="form-group form-floating mb-3">
               <label>Proveedor</label>
               <select   
               :class="{'is-invalid' : producto.proveedor_id=== ''}" 
               
               id="proveedor" v-model="producto.proveedor_id" name="proveedor" class="form-control">
-                <option v-for="proveedor in proveedores" :key="proveedor.id"
-                  :value="proveedor.id"
+                <option v-for="proveedor in proveedores" :key="proveedor.id"  v-show="proveedor.status=== true"
+                  :value="proveedor._id"
                 >{{proveedor.nombre}}</option>
               </select>
             </div>
@@ -48,11 +47,11 @@
             </div>
 
             <button
-              @click="sendProduct()"
+              @click.prevent="sendProduct()"
               value=""
               class="btn btn-primary"
             > Guardar Producto </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -62,12 +61,18 @@
 <script>
 import { ref } from "@vue/reactivity";
 import {  useStore } from 'vuex';
+import {createToast  } from 'mosha-vue-toastify'
+
 import { computed } from '@vue/runtime-core';
-//import '../../../public/css/bootstrap5.css'
+import axios from 'axios'
 export default {
   setup() {
+    
+    const toask= computed(()=>store.state.toask)
     const store = useStore()
-    const proveedores = computed(()=> store.state.productos)
+   
+    store.dispatch('getProveedores')
+    const proveedores = computed(()=> store.state.proveedores)
     const form = [
       { valor :"nombre"},
       { valor :"marca"},
@@ -78,14 +83,15 @@ export default {
       { valor :"codigo"},
       { valor :"iva", number: true},
     ];
-    const nombre = ref("");
+      let id =''
     let producto = ref({ 
       proveedor_id : null,
       nombre: null
       });
-    
-    const sendProduct = function() {
-     // if(!producto.value.proveedor_id){ producto.value.proveedor_id = "" ;return} 
+    const api = computed((()=> store.state.api))
+    const sendProduct =async function() {
+
+      if(!producto.value.proveedor_id){ producto.value.proveedor_id = "" ;return} 
       if(!producto.value.nombre){ producto.value.nombre = "" ;return} 
       if(!producto.value.marca){ producto.value.marca = "" ;return} 
       if(!producto.value.modelo){ producto.value.modelo = "" ;return} 
@@ -93,12 +99,34 @@ export default {
       if(!producto.value.cantidad){ producto.value.cantidad = "" ;return} 
       if(!producto.value.precio){ producto.value.precio = "" ;return} 
       if(!producto.value.codigo){ producto.value.codigo = "" ;return} 
-console.log(producto.value);
-
-     store.dispatch('saveProduct',  producto.value) 
-      producto.value = {proveedor_id: null}
+const {data}= await axios.post(`${api.value}/productos/${id}`, producto.value)
+console.log(data)
+ if(data.status === true)  
+ {producto.value = {proveedor_id: null} 
+ id= ''
+ createToast(data.value, toask.value.success) 
+ return 
+ }
+ else{ createToast(data.value, toask.value.danger)}
     }
-    return { producto, form, nombre, sendProduct, proveedores };
+    function buscarProduct(){
+      try {
+        let uri = window.location.href.split('?')
+    if(uri.length ===2){
+      const {value}= computed(()=> store.state.productos)
+      console.log(value.length)
+if(value.length ===0 ) return 
+id = uri[1]
+const res = value.filter(item=> item._id === id ? item : false )
+    
+    !res ? producto.value={} : producto.value = res[0]
+    }
+      } catch (error) {
+     0
+     }
+    }
+    buscarProduct()
+    return { producto, form, sendProduct, proveedores };
   },
 };
 </script>
