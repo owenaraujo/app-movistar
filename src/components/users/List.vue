@@ -13,17 +13,15 @@
 				<table class="table table-striped table-bordered" id="table">
 					<thead class="thead-dark">
 						<tr>
-							<th>ID</th>
-							<th>NOMBRE</th>
+							<th>#</th>
 							<th>CORREO</th>
 							<th>USUARIO</th>
-							<th>DIRECCIÓN</th>
 							<th>ACCIONES</th>
 						</tr>
 					</thead>
 					<tbody>
 					
-						<List v-for="cliente in clientes" :key="cliente.id" :cliente="cliente"/>
+						<List v-for="(usuario, index) of usuarios" :key="index" :indice="index" :usuario="usuario"/>
 					</tbody>
 
 				</table>
@@ -44,8 +42,9 @@ export default {
 	components:{List},
 	setup(){
 		const store = useStore()
-		const clientes = computed (()=> store.state.clientes)
-		return{clientes}
+		store.dispatch('getUsuarios')
+		const usuarios = computed (()=> store.state.usuarios)
+		return{usuarios}
 	}
  
 }

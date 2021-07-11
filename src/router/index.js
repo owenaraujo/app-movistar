@@ -70,7 +70,7 @@ const router = createRouter({
   linkActiveClass: 'active'
 })
 router.beforeEach((to, from, next) => {
-  if (!to.matched.length) console.warn('no match')
+  if (!to.matched.length) router.push('/')
   next()
 })
 

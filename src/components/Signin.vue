@@ -70,7 +70,7 @@ export default {
     const loger =async () => {
       try {
         
-const {data} = await axios.post('http://localhost:3000/api/usuarios/login', usuario.value)
+const {data} = await axios.post('http://192.168.137.1:3000/api/usuarios/login', usuario.value)
 if(data.status){ return store.dispatch("login", data)
 
 

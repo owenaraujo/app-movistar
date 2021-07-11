@@ -4,7 +4,7 @@
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
 		<h1 class="h3 mb-0 text-gray-800">Proveedores</h1>
-		<router-link to="/proveedores/add" class="btn btn-primary">Nuevo</router-link>
+		<router-link to="/proveedores/add" class="btn btn-primary mt-2">Nuevo</router-link>
 	</div>
 
 	<div class="row">
@@ -22,7 +22,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<List v-for="proveedor in proveedores" :proveedor="proveedor" :key="proveedor._id"/>
+						<List v-show="proveedor.nombre.toLowerCase().indexOf(param.toLowerCase()) !== -1||
+  proveedor.rif.toLowerCase().indexOf(param.toLowerCase()) !== -1" v-for="proveedor in proveedores" :proveedor="proveedor" :key="proveedor._id"/>
 					</tbody>
 
 				</table>
@@ -40,7 +41,8 @@ import List from "./proveedoresList.vue"
 import { useStore} from 'vuex'
 import { computed } from '@vue/runtime-core'
 export default {
-components:{List},
+	components:{List},
+	props:['param'],
 setup(){
 	const store = useStore()
 	

@@ -4,7 +4,7 @@ import { createToast } from "mosha-vue-toastify";
 export default createStore({
   state: {
     search: 'hola',
-    parametro: 'coca',
+    
     toask: {
 danger:{
   hideProgressBar: false,
@@ -32,15 +32,16 @@ danger:{
       transition: 'bounce'
       }
     },
-    api: 'http://localhost:3000/api',
+    api: 'http://api:3000/api',
     sidebars: false,
     logged: false,
     token: null,
     linkclientes: "/clientes",
-    usuarios: null,
+    usuarios: [],
     proveedores: [],
     usuario: {},
     ventas: [],
+    productosTrue : [],
     clientes: [
      
     ],
@@ -49,6 +50,9 @@ danger:{
   mutations: {
     saveProductos(state, payload){
       state.productos = payload
+    let productos = payload.filter(item => item.status === true ? item : 0)
+    
+state.productosTrue = productos
     },
     saveProveedores(state,payload){
 
@@ -74,6 +78,9 @@ state.logged= true
     },
     saveClientes(state, payload){
       state.clientes = payload
+    },
+    saveUsuarios(state, payload){
+      state.usuarios = payload
     },
     cambiarRuta(state, ruta) {
       state.linkclientes = ruta.ruta;
@@ -113,6 +120,16 @@ commit('saveProveedores', data)
         if(state.clientes.length != 0) return
         const {data} = await axios.get(`${state.api}/clientes`)
         commit('saveClientes', data)
+
+      } catch (error) {
+        createToast('no hay conexion con el servidor')
+      }
+    },
+    async getUsuarios({state, commit}){
+      try {
+        
+        const {data} = await axios.get(`${state.api}/usuarios`)
+        commit('saveUsuarios', data)
 
       } catch (error) {
         createToast('no hay conexion con el servidor')

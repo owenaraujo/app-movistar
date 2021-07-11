@@ -1,12 +1,11 @@
 <template>
-  <tr v-if="proveedor.nombre.toLowerCase().indexOf(parametro.toLowerCase()) !== -1||
-  proveedor.rif.toLowerCase().indexOf(parametro.toLowerCase()) !== -1">
+  <tr >
     <td>{{ proveedor.rif }}</td>
     <td>{{ proveedor.nombre }}</td>
     <td>{{ proveedor.telefono }}</td>
     <td>{{ proveedor.direccion }}</td>
     <td>
-      {{parametro}}
+     
       <router-link
         :to="'/proveedores/add?' + proveedor._id"
         class="btn btn-success"
@@ -39,6 +38,8 @@ import {createToast  } from 'mosha-vue-toastify'
 import { useStore } from "vuex";
 import { computed } from "@vue/runtime-core";
 export default {
+  props: ["param", "proveedor"],
+   
  
   setup() {
      const toask= {
@@ -61,14 +62,14 @@ transition: 'zoom'
       store.dispatch("proveedorStatus", id);
     createToast(data.data,toask)
     };
-    const parametro = computed(()=> store.state.parametro)
+   
     return {
-      parametro,
+      
       desactivarProveedor,
       activarProveedor,
     };
   },
-  props: ["proveedor"],
+ 
 };
 </script>
 

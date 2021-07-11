@@ -92,7 +92,7 @@ export default {
       if (data.status) {
         alert(data.data);
         NewProveedor.value = {};
-        window.location.replace(uri[0])
+       // window.location.replace(uri[0])
         id = "";
         return;
       }

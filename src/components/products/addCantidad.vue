@@ -41,7 +41,7 @@
           </div>
 
           <div class="text-center">
-            <button @click.prevent="update()" class=" mr-2 btn btn-primary">
+            <button @click.prevent="update()" class="mr-2 btn btn-primary">
               actualizar
             </button>
             <router-link to="/productos" class="btn btn-danger"
@@ -56,11 +56,13 @@
 <script>
 import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import axios from "axios";
-import {createToast} from 'mosha-vue-toastify'
+import { createToast } from "mosha-vue-toastify";
 export default {
   props: ["param"],
   setup() {
+    let router = useRouter();
     let newDate = ref({ cantidad: null, precio: null });
     const store = useStore();
     const uri = window.location.href.split("?");
@@ -69,20 +71,27 @@ export default {
       if (uri.lengt != 1) {
         let id = uri[1];
         const productos = computed(() => store.state.productos);
-        if (productos.length === 0) return;
+        if (productos.length == 0) {
+          router.push("/productos");
+          return;
+        }
         const res = productos.value.filter((item) =>
           item._id === id ? item : 0
         );
         console.log(res.length);
-        if (res.length === 0) return;
-        info = ref(res[0])
+        if (res.length === 0) {
+           router.push("/productos");
+          return
+          }
+        info = ref(res[0]);
       }
     }
     let api = computed(() => store.state.api);
     create();
-    let toast = computed(()=>store.state.toask)
+    let toast = computed(() => store.state.toask);
     async function update() {
-      if (!newDate.value.precio) return (newDate.precio = "");
+      try {
+        if (!newDate.value.precio) return (newDate.precio = "");
       if (!newDate.value.cantidad) return (newDate.cantidad = "");
 
       const New = {
@@ -93,15 +102,18 @@ export default {
         `${api.value}/productos/cantidad/${info.value._id}`,
         New
       );
-      if(data.status){
-      createToast(data.value, toast.value.success)
-    info.value = {}
-    newDate.value = {}  
-       }
-       else{
-      createToast(data.value, toast.value.warning)
-
-       }
+      if (data.status) {
+        createToast(data.value, toast.value.success);
+        info.value = {};
+        newDate.value = {};
+        router.push("/productos");
+      } else {
+        createToast(data.value, toast.value.warning);
+      }
+      } catch (error) {
+        createToast('no se pudo conectar al servidor');
+        
+      }
     }
     return { uri, info, newDate, update };
   },

@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="table-responsive scrollbar-light-blue" >
-          <table class="table table-striped table-bordered" id="table">
+          <table class="table table-striped table-bordered text-center" id="table">
             <thead class="thead-dark">
               <tr>
                 <th>CODIGO</th>

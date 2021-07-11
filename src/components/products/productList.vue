@@ -6,13 +6,13 @@
     <td>{{ producto.cantidad }}</td>
 
     <td>
-      <router-link :to="'/productos/add/cantidad?'+ producto._id" class="btn btn-primary"
+      <router-link :to="'/productos/add/cantidad?'+ producto._id" class="btn btn-primary ml-2"
         ><i class="fas fa-audio-description"></i
       ></router-link>
 
       <router-link
         :to="'/productos/add?' + producto._id"
-        class="btn btn-success"
+        class="btn btn-warning ml-2"
         ><i class="fas fa-edit"></i
       ></router-link>
 
@@ -20,7 +20,7 @@
         <button
           v-show="producto.status"
           @click="desactivarProducto(producto._id)"
-          class="btn btn-danger"
+          class="btn btn-danger ml-2"
         >
           <i class="fas fa-trash-alt"></i>
         </button>
@@ -28,7 +28,7 @@
         <button
           v-show="!producto.status"
           @click="activarProducto(producto._id)"
-          class="btn btn-success"
+          class="btn btn-success ml-2"
         >
           <i class="fas fa-check"></i>
         </button>

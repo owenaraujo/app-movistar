@@ -1,10 +1,9 @@
 <template>
   <tr>
-    <td>{{cliente}}</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>{{indice + 1}}</td>
+    <td>{{usuario.email}}</td>
+    <td>{{usuario.username}}</td>
+    
     <td>
       <a
         href="editar_usuario.php?id=<?php echo $data['idusuario']; ?>"
@@ -25,8 +24,15 @@
 </template>
 
 <script>
+import { computed } from '@vue/runtime-core';
+import { useStore } from 'vuex';
 export default {
-    props:['cliente'],
+    props:['usuario', 'indice'],
+    setup(){
+      let store = useStore()
+      let usuarios = computed(()=> store.state.usuarios)
+      return{usuarios}
+    }
 };
 </script>
 
