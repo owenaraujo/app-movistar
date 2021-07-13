@@ -4,7 +4,7 @@
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
 		<h1 class="h3 mb-0 text-gray-800">Usuarios</h1>
-		<router-link to="/usuarios/add"  class="btn btn-primary">Nuevo</router-link>
+		<router-link to="/usuarios/add"  class="btn btn-primary mt-2">Nuevo</router-link>
 	</div>
 
 	<div class="row">

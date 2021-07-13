@@ -50,10 +50,15 @@ import axios from "axios";
 import { useStore } from "vuex";
 import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
+import {useRouter} from "vue-router"
+import { createToast } from 'mosha-vue-toastify';
 export default {
+  props:['param'],
   setup() {
     const store = useStore();
+    let router = useRouter()
     const api = computed(() => store.state.api);
+    let toast = computed(()=> store.state.toask)
     const form = [
       { value: "nombre", type: String },
       { value: "rif", type: Number },
@@ -90,13 +95,17 @@ export default {
         NewProveedor.value
       );
       if (data.status) {
-        alert(data.data);
+        
         NewProveedor.value = {};
-       // window.location.replace(uri[0])
-        id = "";
-        return;
+       router.push('/proveedores')
+        
+        createToast(data.data,toast.value.success )
       }
-      alert(data.data);
+      else{
+        createToast(data.data,toast.value.danger )
+
+      }
+      
     };
 
     return {

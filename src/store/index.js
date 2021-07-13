@@ -60,13 +60,16 @@ state.proveedores = []
 state.proveedores = payload
     },
     async verifyUser(state){
-if(localStorage.token && localStorage.id){
-  state.token = localStorage.token
-  const {data} = await axios.get(`${state.api}/usuarios/${localStorage.id}`)
-  state.usuario = data
-  state.logged = true
-}
-    },
+try {
+  if(localStorage.token && localStorage.id){
+    state.token = localStorage.token
+    const {data} = await axios.get(`${state.api}/usuarios/${localStorage.id}`)
+    state.usuario = data
+    state.logged = true
+  }
+} catch (error) {
+  createToast('no hay acceso al servidor')}
+},
    async logear(state,payload) {
       const {data} = await axios.get(`${state.api}/usuarios/${payload.usuario}`)
       state.usuario = data

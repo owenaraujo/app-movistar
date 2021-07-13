@@ -5,33 +5,52 @@
     <td>{{usuario.username}}</td>
     
     <td>
-      <a
-        href="editar_usuario.php?id=<?php echo $data['idusuario']; ?>"
+      <router-link
+        :to="'/usuarios/add?'+ usuario._id"
         class="btn btn-success"
-        ><i class="fas fa-edit"></i> Editar</a
+        ><i class="fas fa-edit"></i> Editar</router-link
       >
-      <form
-        action="eliminar_usuario.php?id=<?php echo $data['idusuario']; ?>"
-        method="post"
+      <div
+      
         class="confirmar d-inline"
       >
-        <button class="btn btn-danger" type="submit">
+        <button v-if="usuario.status == true"  class="btn btn-danger ml-2" @click="desactivar(usuario._id)">
           <i class="fas fa-trash-alt"></i>
         </button>
-      </form>
+        <button v-show="usuario.status == false" class="btn btn-success  ml-2" @click="activar(usuario._id)" >
+          <i class="fas fa-check"></i>
+        </button>
+      </div>
     </td>
   </tr>
 </template>
 
 <script>
-import { computed } from '@vue/runtime-core';
+import { computed, ref } from '@vue/runtime-core';
 import { useStore } from 'vuex';
+import axios from 'axios';
+import { createToast } from 'mosha-vue-toastify';
 export default {
     props:['usuario', 'indice'],
-    setup(){
+    setup(props)
+    {
+      let usuario= ref(props.usuario)
       let store = useStore()
+    let toast = computed(()=> store.state.toask)
+    let api = computed(()=> store.state.api)
+      async function desactivar (id){
+const {data} = await axios.delete(`${api.value}/usuarios/${id}`)
+data.status ===true ? (usuario.value.status = false, createToast(data.value,  toast.value.danger)): createToast(data.value,  toast.value.warning)
+
+      }
+      async function activar (id){
+const {data} = await axios.delete(`${api.value}/usuarios/activar/${id}`)
+usuario.value.status = true
+createToast(data.value, toast.value.success)
+      }
+     
       let usuarios = computed(()=> store.state.usuarios)
-      return{usuarios}
+      return{usuarios, desactivar, activar}
     }
 };
 </script>

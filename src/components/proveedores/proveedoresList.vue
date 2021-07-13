@@ -42,25 +42,19 @@ export default {
    
  
   setup() {
-     const toask= {
-hideProgressBar: false,
-showIcon: true,
-position: 'top-left',
-type: 'danger',
-transition: 'zoom'
-}
     const store = useStore();
+     const toast = computed(()=> store.state.toask)
     const api = computed(() => store.state.api);
     const desactivarProveedor = async (id) => {
      const {data}= await axios.delete(`${api.value}/proveedores/${id}`);
       store.dispatch("proveedorStatus", id);
-    createToast(data.data,toask)
+    createToast(data.data,toast.value.danger)
 
     };
     const activarProveedor = async (id) => {
      const {data}= await axios.delete(`${api.value}/proveedores/activate/${id}`);
       store.dispatch("proveedorStatus", id);
-    createToast(data.data,toask)
+    createToast(data.data,toast.value.success)
     };
    
     return {

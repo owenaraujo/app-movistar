@@ -3,20 +3,41 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
-      <router-link to="/usuarios" class="btn btn-primary">Regresar</router-link>
+      <router-link to="/usuarios" class="btn btn-primary mt-2"
+        >Regresar</router-link
+      >
     </div>
 
     <!-- Content Row -->
     <div class="row">
       <div class="col-lg-6 m-auto">
-          {{newUser}}
-        <form  autocomplete="off">
-           <div class="form-group">
+        <form autocomplete="off">
+          <div class="form-group">
+            <label>Rol</label>
+            <select
+              :class="{ 'is-invalid': newUser.rol === '' }"
+              v-model="newUser.rol"
+              name="rol"
+              id="rol"
+              class="form-control"
+            >
+              <option
+                v-for="(item, index) in roles"
+                :key="index"
+                :value="item._id"
+              >
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
             <label for="usuario">Usuario</label>
             <input
               type="text"
               class="form-control"
               placeholder="Ingrese Usuario"
+              :class="{ 'is-invalid': newUser.username === '' }"
               name="usuario"
               v-model="newUser.username"
             />
@@ -25,16 +46,18 @@
             <label for="correo">Correo</label>
             <input
               type="email"
+              :class="{ 'is-invalid': newUser.email === '' }"
               class="form-control"
               placeholder="Ingrese Correo Electrónico"
               id="correo"
-             v-model="newUser.email"
+              v-model="newUser.email"
             />
           </div>
-         
+
           <div class="form-group">
             <label for="clave">Contraseña</label>
             <input
+              :class="{ 'is-invalid': newUser.password === '' }"
               type="password"
               id="clave"
               class="form-control"
@@ -45,7 +68,9 @@
           <div class="form-group">
             <label for="verificarClave">Contraseña</label>
             <input
-            :class="{'is-invalid': newUser.password != newUser.verifyPassword}"
+              :class="{
+                'is-invalid': newUser.password != newUser.verifyPassword,
+              }"
               type="password"
               id="verificarClave"
               class="form-control"
@@ -53,69 +78,100 @@
               v-model="newUser.verifyPassword"
             />
           </div>
-          <div class="form-group">
-            <label>Rol</label>
-            <select v-model="newUser.rol" name="rol" id="rol" class="form-control">
-                <option  value="" disabled selected>seleccione un rol</option>
-              <option v-for="(item, index) in roles" :key="index" :value="item._id">{{item.nombre}}</option>
-            </select>
-          </div>
-          <input
+
+          <button
+            @click.prevent="save()"
             type="submit"
             value="Guardar Usuario"
             class="btn btn-primary"
-          />
+          >
+            Guardar Usuario
+          </button>
         </form>
+       
       </div>
     </div>
   </div>
-  {{roles}}
 </template>
 
 <script>
-import { computed, ref } from '@vue/runtime-core'
-import { useStore } from 'vuex'
-import axios from 'axios'
-import { createToast } from 'mosha-vue-toastify'
+import { computed, ref } from "@vue/runtime-core";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import axios from "axios";
+import { createToast } from "mosha-vue-toastify";
 export default {
-    props:['param'],
-    setup(){
-        let store = useStore()
-       
-        let api = computed(()=> store.state.api)
-async function save (){
-    try {
-        const {data}= await axios.post(`${api.value}/usuarios`)
-        if (data.statu) {
-            createToast(data.value)
-            return
-        } else{
-            console.log(data)
-        }
-    } catch (error) {
-        createToast('no hay conexion con el servidor')
-    }
-}        let roles = ref([])
- async function getRoles (){
-            try {
-                const {data}= await axios.get(`${api.value}/usuarios/roles`) 
-                console.log(data)
-                roles.value = data
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getRoles()
-        let newUser =ref( {
-username: "admin",
-email: "default@gmail.com",
-password: null,
-rol:null })
-return {newUser, save, roles}
-    }
+  props: ["param"],
+  setup() {
+    let store = useStore();
+    let toast = computed(()=> store.state.toask)
 
+    let newUser = ref({
+      username: null,
+      email: null,
+      password: null,
+      rol: null,
+    });
+    let router = useRouter();
+    let id = "";
+   function buscarUser() {
+      try {
+        let uri = window.location.href.split("?");
+        if (uri.length === 2) {
+          const { value } = computed(() => store.state.usuarios);
 
-}
+          if (value.length === 0) {
+            router.push("/usuarios/add");
+            return;
+          }
+          id = uri[1];
+          const res = value.filter((item) => (item._id === id ? item : false));
+
+          !res ? (newUser.value = {}) : (res[0].password = null,newUser.value = res[0], id = uri[1]);
+        }
+      } catch (error) {
+        0;
+      }
+    }
+    buscarUser()
+    let api = computed(() => store.state.api);
+    async function save() {
+
+      try { 
+        let usuario = newUser.value;
+        if (!usuario.username) return (usuario.username = "");
+        if (!usuario.email) return (usuario.email = "");
+        if (!usuario.password) return (usuario.password = "");
+        if (usuario.password != usuario.verifyPassword)
+          return (usuario.password = "");
+        if (!usuario.rol) return (usuario.rol = "");
+        const { data } = await axios.post(`${api.value}/usuarios/${id}`, usuario);
+        if (data.status) {
+          createToast(data.value, toast.value.success);
+          router.push("/usuarios");
+          newUser.value = {};
+        } else {
+          createToast(data.value, toast.value.danger);
+        }
+      } catch (error) {
+        createToast("no hay conexion con el servidor");
+      }
+    }
+    let roles = ref([]);
+    async function getRoles() {
+      try {
+        const { data } = await axios.get(`${api.value}/usuarios/roles`);
+
+        roles.value = data;
+      } catch (error) {
+       createToast('no hay acceso al servidor')
+      }
+    }
+    getRoles();
+    
+    return { newUser, save, roles };
+  },
+};
 </script>
 
 <style>
