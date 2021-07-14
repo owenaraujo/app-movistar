@@ -14,10 +14,10 @@
       
         class="confirmar d-inline"
       >
-        <button v-if="usuario.status == true"  class="btn btn-danger ml-2" @click="desactivar(usuario._id)">
+        <button v-show="usuario.status"  class="btn btn-danger ml-2" @click="desactivar(usuario._id)">
           <i class="fas fa-trash-alt"></i>
         </button>
-        <button v-show="usuario.status == false" class="btn btn-success  ml-2" @click="activar(usuario._id)" >
+        <button v-show="!usuario.status" class="btn btn-success  ml-2" @click="activar(usuario._id)" >
           <i class="fas fa-check"></i>
         </button>
       </div>

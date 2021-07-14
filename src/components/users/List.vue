@@ -21,7 +21,11 @@
 					</thead>
 					<tbody>
 					
-						<List v-for="(usuario, index) of usuarios" :key="index" :indice="index" :usuario="usuario"/>
+						<List  v-show="
+                usuario.username.toLowerCase().indexOf(param.toLowerCase()) !=
+                    -1 ||
+                    usuario.email.toLowerCase().indexOf(param.toLowerCase()) != -1
+                " v-for="(usuario, index) of usuarios" :key="index" :indice="index" :usuario="usuario"/>
 					</tbody>
 
 				</table>
@@ -39,6 +43,7 @@ import { computed } from '@vue/runtime-core'
 import { useStore} from 'vuex'
 import List from "./userList.vue"
 export default {
+	props: ['param'],
 	components:{List},
 	setup(){
 		const store = useStore()

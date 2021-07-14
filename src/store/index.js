@@ -36,18 +36,23 @@ danger:{
     sidebars: false,
     logged: false,
     token: null,
+    dataCliente: false,
+    datosCliente: {},
     linkclientes: "/clientes",
     usuarios: [],
     proveedores: [],
     usuario: {},
     ventas: [],
+    clientesActivos : [],
     productosTrue : [],
-    clientes: [
-     
-    ],
+    clientes: [],
     productos: [],
   },
   mutations: {
+    saveCliente(state,payload){
+state.datosCliente = payload
+state.dataCliente = true
+    },
     saveProductos(state, payload){
       state.productos = payload
     let productos = payload.filter(item => item.status === true ? item : 0)
@@ -81,6 +86,8 @@ state.logged= true
     },
     saveClientes(state, payload){
       state.clientes = payload
+      let clientes = payload.filter(item => item.status ===true ? item: 0)
+      state.clientesActivos = clientes
     },
     saveUsuarios(state, payload){
       state.usuarios = payload
@@ -97,6 +104,9 @@ state.proveedores.map(item=>item._id === payload ?item.status =  !item.status:0)
     }
   },
   actions: {
+    guardarCliente({commit}, cliente){
+      commit('saveCliente',cliente )
+    },
     async getProductos({commit, state}){
       const {data}= await axios.get(`${state.api}/productos`)
       commit('saveProductos', data)

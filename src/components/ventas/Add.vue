@@ -11,26 +11,40 @@
     <div class="row">
       <div class="col-sm-3">
         <h4 class="">Datos del Cliente</h4>
-        <label for="buscarCliente">busqueda de cliente</label>
-{{cliente}}
-        <input id="buscarCliente" type="text" class="form-control mb-2" />
-        <div class="resultado">
+        <div v-show="dataCliente">
+          
+<h5>
+          {{datosCliente.nombre}} {{datosCliente.apellido}} 
+  </h5> 
+  <p>
+           {{datosCliente.dni}}
+    </p>         
+          </div>
+        <div v-show="!dataCliente">
+          <label for="buscarCliente">busqueda de cliente</label>
+
+        <input autocomplete="off" v-model="buscarClientes" id="buscarCliente" type="text" class="form-control mb-2" />
+        <div class="resultado" v-if="buscarClientes">
           <select
-            :class="{ 'd-none': busquedaCliente }"
+          multiple
+           
             class="custom-select scrollbar-light-blue"
-            multiple
+            
             v-model="cliente"
           >
-            <option selected>Open this select menu</option>
 
-            <option
-              v-for="(item, index) in clientes"
-              :key="index"
+            <option @click="selectCliente(item)" 
+              v-for="(item) in clientes"
+              :key="item._id"
               :value="item._id"
+              v-show="item.nombre.toLowerCase().indexOf(buscarClientes.toLowerCase()) != -1||
+              item.dni.toLowerCase().indexOf(buscarClientes.toLowerCase()) != -1"
             >
               {{ item.nombre }}
             </option>
+            
           </select>
+        </div>
         </div>
       </div>
       <div class="col-lg-12">
@@ -60,10 +74,33 @@
               <tr>
                 <td>
                   <input
-                    type="number"
+                    type="text"
+                    class="form-control form-control-md"
                     name="txt_cod_producto"
                     id="txt_cod_producto"
+                    v-model="buscarProducto"
                   />
+                   <div class="resultado2" v-if="buscarProducto" >
+                     
+          <select
+          multiple
+           
+            class="custom-select scrollbar-light-blue"
+            
+            v-model="producto"
+          >
+
+            <option 
+              v-for="(item) in productos"
+              :key="item._id"
+              :value="item._id"
+              v-show="item.codigo.toLowerCase().indexOf(buscarProducto.toLowerCase()) != -1"
+            >
+              {{ item.nombre }}
+            </option>
+            
+          </select>
+        </div>
                 </td>
                 <td id="txt_descripcion">-</td>
                 <td id="txt_existencia">-</td>
@@ -127,20 +164,34 @@
 import { useStore } from "vuex";
 import { computed, ref } from "@vue/reactivity";
 export default {
+  props:['param'],
   setup() {
-      let cliente = ref('')
+      
     let store = useStore();
     store.dispatch("getProductos");
     store.dispatch("getClientes");
+    let cliente = ref('')
+    let buscarProducto= ref('')
+   let dataClientes = computed(()=>store.state.dataCliente)
+   let datosClientes = computed(()=>store.state.datosCliente)
+   let dataCliente = ref(dataClientes.value)
+   let datosCliente = ref(datosClientes.value)
+      let buscarClientes= ref('')
+    function selectCliente(cliente) {
+      buscarClientes.value = ""
+      dataCliente.value =true
+      store.dispatch('guardarCliente', cliente)
+      datosCliente.value =cliente
+    }
     const sendUrl = () => {
       const ruta = { ruta: "/ventas/add" };
       store.dispatch("sendUrl", ruta);
     };
-    let busquedaCliente = ref(false);
+   let producto = ref ({})
     let productos = computed(() => store.state.productosTrue);
-    let clientes = computed(() => store.state.clientes);
+    let clientes = computed(() => store.state.clientesActivos);
 
-    return { sendUrl, productos, clientes, busquedaCliente, cliente };
+    return { producto,buscarProducto,sendUrl,selectCliente, productos,buscarClientes, clientes, cliente, dataCliente,datosCliente };
   },
 };
 </script>
@@ -154,6 +205,24 @@ export default {
   width: 85%;
   max-height: 30vh;
 }
+
+.resultado2 {
+  background: #ececec;
+  position: absolute;
+  z-index: 150;
+  border-radius: 0.5rem;
+  width: 20%;
+  max-height: 30vh;
+}
+@media screen and (max-width: 500px){
+  .resultado2 {
+  background: #ececec;
+  position: absolute;
+  z-index: 150;
+  border-radius: 0.5rem;
+  width: 55%;
+  max-height: 30vh;
+}}
 .scrollbar-light-blue::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
   background-color: #f5f5f5;

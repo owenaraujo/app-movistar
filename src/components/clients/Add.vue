@@ -3,7 +3,7 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
-      <router-link :to="ruta" class="btn btn-primary">Regresar</router-link>
+      <router-link :to="ruta" class="btn btn-primary mt-2">Regresar</router-link>
     </div>
 
     <!-- Content Row -->
@@ -52,6 +52,7 @@ import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import axios from "axios";
 import { createToast } from "mosha-vue-toastify";
+import { useRouter } from 'vue-router';
 export default {
   setup() {
     let form = [
@@ -62,6 +63,7 @@ export default {
       { value: "direccion" },
     ];
     let store = useStore();
+    let router = useRouter()
     let newCliente = ref({
       dni: null,
       nombre: null,
@@ -85,6 +87,7 @@ export default {
       newCliente.value.boton = false;
       if (data.status == false || data.status === null) return;
 id= ''
+router.push('/clientes')
       newCliente.value = {};
     };
     let uri = window.location.href.split('?')
@@ -92,9 +95,9 @@ id= ''
       id = uri[1]
       let clientes = computed(()=> store.state.clientes)
 const item = clientes.value.filter(item=> item._id === id ? item : 0)
-item.length === 0 ? id = '': (newCliente.value = item[0], delete form.splice(0, 1)) 
+item.length === 0 ? router.push('/clientes/add'): (newCliente.value = item[0], delete form.splice(0, 1)) 
 }
-    console.log(uri)
+   
     const ruta = computed(() => store.state.linkclientes);
     return {
       ruta,

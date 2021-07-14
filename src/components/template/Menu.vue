@@ -14,7 +14,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <img src="/img/logo.png" class="img-thumbnail" />
         </div>
-        <div class="sidebar-brand-text mx-3">Vida Informático</div>
+        <div class="sidebar-brand-text mx-3">serious programming</div>
       </router-link>
 
       <!-- Divider -->
@@ -193,6 +193,9 @@ export default {
 </script>
 
 <style>
+.img-thumbnail{
+  width: 100%;
+}
 .oculto {
   width: 0 !important;
   overflow: hidden;
