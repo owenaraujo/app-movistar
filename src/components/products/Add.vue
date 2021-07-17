@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <div class="container-fluid mt-2">
       <!-- Page Heading -->
       <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -82,6 +83,7 @@ export default {
     const router = useRouter();
     store.dispatch("getProveedores");
     const proveedores = computed(() => store.state.proveedores);
+    let token = computed(()=> store.state.token)
     const form = [
       { valor: "nombre" },
       { valor: "marca" },
@@ -134,7 +136,7 @@ export default {
         }
         const { data } = await axios.post(
           `${api.value}/productos/${id}`,
-          producto.value
+          producto.value, {headers:{xtoken:token.value}}
         );
 
         if (data.status === true) {
@@ -171,7 +173,7 @@ export default {
       }
     }
     buscarProduct();
-    return { producto, form, sendProduct, proveedores };
+    return { producto, form, sendProduct, proveedores, token };
   },
 };
 </script>

@@ -15,7 +15,7 @@
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Iniciar Sesión</h1>
                   </div>
-                  <form class="user">
+                  <form class="user" autocomplete="off">
                     <div class="form-group">
                       <label for="">Usuario</label>
                       <input
@@ -65,7 +65,7 @@ export default {
   setup() {
     const store = useStore();
     let toast = computed(()=>store.state.toask)
-    const usuario = ref({ password: "asd", username: "dasd" });
+    const usuario = ref({ password: "", username: "" });
     const usuarios = computed (()=> store.state.usuarios)
     const loger =async () => {
       try {

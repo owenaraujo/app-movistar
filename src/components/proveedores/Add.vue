@@ -1,5 +1,5 @@
 <template>
-  {{ id }}
+  
   <div class="container-fluid mt-2 mb-2">
     <!-- Content Row -->
     <div class="row">

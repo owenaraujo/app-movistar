@@ -9,6 +9,20 @@ const routes = [
 
       component: () => import("../components/template/Index.vue"),
     },
+  {
+      path: "/configuracion",
+      name: "condig",
+      meta: { title: 'configuracion' },
+
+      component: () => import("../components/config/Config.vue"),
+    },
+  {
+      path: "/403",
+      name: "403",
+      meta: { title: '403' },
+
+      component: () => import("../components/403.vue"),
+    },
     {
       path: "/proveedores/add",
       name: "proveedoresAdd",

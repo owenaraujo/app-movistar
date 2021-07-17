@@ -64,6 +64,7 @@ export default {
     ];
     let store = useStore();
     let router = useRouter()
+    let toast = computed(()=> store.state.toask)
     let newCliente = ref({
       dni: null,
       nombre: null,
@@ -75,7 +76,8 @@ export default {
     let usuario = computed(() => store.state.usuario);
       let id =''
     const save = async () => {
-      let value = newCliente.value;
+      try {
+        let value = newCliente.value;
       if (!value.dni) return (value.dni = "");
       if (!value.nombre) return (value.nombre = "");
       if (!value.telefono) return (value.telefono = "");
@@ -83,12 +85,18 @@ export default {
       value.user_id = usuario.value._id;
       newCliente.value.boton = true;
       const { data } = await axios.post(`${api.value}/clientes/${id}`, value);
-      createToast(data.value);
       newCliente.value.boton = false;
-      if (data.status == false || data.status === null) return;
+      if (data.status == false || data.status === null)  return createToast(data.value, toast.value.danger);
+      createToast(data.value, toast.value.success);
+
 id= ''
-router.push('/clientes')
+router.push('/clientes/add')
       newCliente.value = {};
+      } catch (error) {
+        createToast('no hay acceso al servidor')
+      newCliente.value.boton = false;
+
+      }
     };
     let uri = window.location.href.split('?')
     if(uri.length != 1){

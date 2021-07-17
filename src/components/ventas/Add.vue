@@ -12,61 +12,60 @@
       <div class="col-sm-3">
         <h4 class="">Datos del Cliente</h4>
         <div v-show="dataCliente">
-          
-<h5>
-          {{datosCliente.nombre}} {{datosCliente.apellido}} 
-  </h5> 
-  <p>
-           {{datosCliente.dni}}
-    </p>         
-          </div>
+          <h5 style="font-size: 16px; text-transform: uppercase; color: blue">
+            {{ datosCliente.nombre }} {{ datosCliente.apellido }}
+          </h5>
+          <p>
+            {{ datosCliente.dni }}
+          </p>
+        </div>
         <div v-show="!dataCliente">
           <label for="buscarCliente">busqueda de cliente</label>
 
-        <input autocomplete="off" v-model="buscarClientes" id="buscarCliente" type="text" class="form-control mb-2" />
-        <div class="resultado" v-if="buscarClientes">
-          <select
-          multiple
-           
-            class="custom-select scrollbar-light-blue"
-            
-            v-model="cliente"
-          >
-
-            <option @click="selectCliente(item)" 
-              v-for="(item) in clientes"
-              :key="item._id"
-              :value="item._id"
-              v-show="item.nombre.toLowerCase().indexOf(buscarClientes.toLowerCase()) != -1||
-              item.dni.toLowerCase().indexOf(buscarClientes.toLowerCase()) != -1"
+          <input
+            autocomplete="off"
+            v-model="buscarClientes"
+            id="buscarCliente"
+            type="text"
+            class="form-control mb-2"
+          />
+          <div class="resultado" v-if="buscarClientes">
+            <select
+              multiple
+              class="custom-select scrollbar-light-blue"
+              
             >
-              {{ item.nombre }}
-            </option>
-            
-          </select>
-        </div>
+              <option
+                @click="selectCliente(item)"
+                v-for="item in clientes"
+                :key="item._id"
+                :value="item._id"
+                v-show="
+                  item.nombre
+                    .toLowerCase()
+                    .indexOf(buscarClientes.toLowerCase()) != -1 ||
+                  item.dni
+                    .toLowerCase()
+                    .indexOf(buscarClientes.toLowerCase()) != -1
+                "
+              >
+                {{ item.nombre }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="col-lg-12">
         <h4 class="text-center">Datos Venta</h4>
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="form-group">
-              <label><i class="fas fa-user"></i> VENDEDOR</label>
-              <p
-                style="font-size: 16px; text-transform: uppercase; color: blue"
-              ></p>
-            </div>
-          </div>
-        </div>
+
         <div class="table-responsive">
           <table class="table table-hover">
             <thead class="thead-dark">
               <tr>
                 <th width="100px">Código</th>
-                <th>Des.</th>
+                <th>modelo</th>
                 <th>Stock</th>
-                <th width="100px">Cantidad</th>
+                <th width="100px">IVA</th>
                 <th class="textright">Precio</th>
                 <th class="textright">Precio Total</th>
                 <th>Acciones</th>
@@ -74,83 +73,101 @@
               <tr>
                 <td>
                   <input
+                    autocomplete="off"
                     type="text"
                     class="form-control form-control-md"
                     name="txt_cod_producto"
                     id="txt_cod_producto"
                     v-model="buscarProducto"
                   />
-                   <div class="resultado2" v-if="buscarProducto" >
-                     
-          <select
-          multiple
-           
-            class="custom-select scrollbar-light-blue"
-            
-            v-model="producto"
-          >
-
-            <option 
-              v-for="(item) in productos"
-              :key="item._id"
-              :value="item._id"
-              v-show="item.codigo.toLowerCase().indexOf(buscarProducto.toLowerCase()) != -1"
-            >
-              {{ item.nombre }}
-            </option>
-            
-          </select>
-        </div>
+                  <div class="resultado2" v-if="buscarProducto">
+                    <select
+                      multiple
+                      class="custom-select scrollbar-light-blue"
+                    
+                    >
+                      <option
+                        v-for="item in productos"
+                        @click="selectProducto(item)"
+                        :key="item._id"
+                        :value="item._id"
+                        v-show="
+                          item.codigo
+                            .toLowerCase()
+                            .indexOf(buscarProducto.toLowerCase()) != -1
+                        "
+                      >
+                        {{ item.nombre }}-{{ item.codigo }}
+                      </option>
+                    </select>
+                  </div>
                 </td>
-                <td id="txt_descripcion">-</td>
-                <td id="txt_existencia">-</td>
-                <td>
-                  <input
-                    type="text"
-                    name="txt_cant_producto"
-                    id="txt_cant_producto"
-                    value="0"
-                    min="1"
-                    disabled
-                  />
+                <td id="txt_descripcion">
+                  {{ inputsAgregar.modelo }}
                 </td>
-                <td id="txt_precio" class="textright">0.00</td>
-                <td id="txt_precio_total" class="txtright">0.00</td>
+                <td id="txt_existencia">{{ inputsAgregar.cantidad }}</td>
                 <td>
-                  <a
-                    href="#"
+                  {{total -inputsAgregar.precio}}
+                </td>
+                <td id="txt_precio" class="textright">
+                  {{ inputsAgregar.precio }}
+                </td>
+                <td id="txt_precio_total" class="txtright">{{ total }}</td>
+                <td>
+                  <button
+                    @click="agregarCarrito()"
                     id="add_product_venta"
                     class="btn btn-dark"
-                    style="display: none"
-                    >Agregar</a
+                    v-show="cantidad > 0"
+                    :disabled="inputsAgregar.cantidad === 0"
+                    v-if="inputsAgregar.cantidad"
                   >
+                    Agregar
+                  </button>
                 </td>
               </tr>
               <tr>
                 <th>Código</th>
-                <th colspan="2">Descripción</th>
-                <th>Cantidad</th>
+                <th>modelo</th>
+                <th>IMEI</th>
+                <th>cantidad</th>
                 <th class="textright">Precio</th>
                 <th class="textright">Precio Total</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody id="detalle_venta">
-              <!-- Contenido ajax -->
+              <ListProductos
+                v-for="(producto, index) in productosVenta"
+                :indice="index"
+                :key="index"
+                :producto="producto"
+              />
             </tbody>
 
             <tfoot id="detalle_totales">
-              <!-- Contenido ajax -->
+              <tr>
+                <td colspan="6" class="textright">Sub-total</td>
+                <td>{{ totalVenta }}</td>
+              </tr>
+              <tr>
+                <td colspan="6" class="textright">iva</td>
+                <td>{{ iva }}</td>
+              </tr>
+              <tr>
+                <td colspan="6" class="textright">total a pagar</td>
+                <td>{{ iva + totalVenta }}</td>
+              </tr>
             </tfoot>
           </table>
         </div>
         <div class="col-lg-12 text-center">
           <label>Acciones</label>
-          <div id="acciones_venta" class="form-group">
-            <buttom href="#" class="btn btn-danger mr-2" id="btn_anular_venta"
-              >Anular</buttom
+          <div class="form-group">
+            <button @click="cancelVenta()" class="btn btn-danger mr-2"
+              >Anular</button
             >
-            <button class="btn btn-primary" id="btn_facturar_venta">
+            <button @click="preGuardarCompra()" class="btn btn-primary" id="btn_facturar_venta">
               <i class="fas fa-save"></i> Generar Venta
             </button>
           </div>
@@ -158,40 +175,157 @@
       </div>
     </div>
   </div>
+
+
+<!-- modal -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
+
+<!-- Modal -->
+<div v-if="modalVenta">
+  <div class="modal fade show" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"  style="display: block" aria-modal="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-check">
+  <input class="form-check-input" v-model="prestamo" type="checkbox"  id="defaultCheck1">
+  <label class="form-check-label" for="defaultCheck1">
+    Reportar venta como prestamo
+  </label>
+</div>{{notaVenta}}
+        <label for="inputNota"></label>
+      <input v-model="notaVenta" type="text" id="inputNota" placeholder="agregar una nota" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button @click="modalVenta = false" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" @click="guardarCompra()" class="btn btn-primary">acepat</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+</div>
+<!-- modal -->
+
 </template>
 
 <script>
 import { useStore } from "vuex";
 import { computed, ref } from "@vue/reactivity";
+import ListProductos from "./listProductsVenta.vue";
 export default {
-  props:['param'],
+  props: ["param"],
+  components: { ListProductos },
   setup() {
-      
+    //respuestas automaticas
     let store = useStore();
     store.dispatch("getProductos");
     store.dispatch("getClientes");
-    let cliente = ref('')
-    let buscarProducto= ref('')
-   let dataClientes = computed(()=>store.state.dataCliente)
-   let datosClientes = computed(()=>store.state.datosCliente)
-   let dataCliente = ref(dataClientes.value)
-   let datosCliente = ref(datosClientes.value)
-      let buscarClientes= ref('')
+    //ref
+    let modalVenta = ref(true)
+    let buscarProducto = ref("");
+    let inputsAgregar = ref({});
+    let cantidad = ref(1);
+    let buscarClientes = ref("");
+    //computed
+    let productosVenta = computed(() => store.state.productosVenta);
+    let notaVenta = ref('');
+    let prestamo = ref(false);
+    let total = computed(() => {
+      let obj = inputsAgregar.value;
+      let iva = ((obj.precio * obj.iva) / 100) * cantidad.value;
+      let totalSinIva = obj.precio * cantidad.value;
+
+      if (!totalSinIva) totalSinIva = 0;
+      if (!iva) iva = 0;
+
+      return totalSinIva + iva;
+    });
+    let dataCliente = computed(() => store.state.dataCliente);
+    let datosCliente = computed(() => store.state.datosCliente);
+    let totalVenta = computed(()=> productosVenta.value.reduce((sum , item) =>sum + item.cantidad * item.precio, 0))
+    let iva = computed(()=> productosVenta.value.reduce((sum , item) =>sum + item.cantidad * item.precio * item.iva /100, 0))
+    let productos = computed(() => store.state.productosTrue);
+    let clientes = computed(() => store.state.clientesActivos);
+//funciones
     function selectCliente(cliente) {
-      buscarClientes.value = ""
-      dataCliente.value =true
-      store.dispatch('guardarCliente', cliente)
-      datosCliente.value =cliente
+      buscarClientes.value = "";
+
+      store.dispatch("guardarCliente", cliente);
     }
     const sendUrl = () => {
       const ruta = { ruta: "/ventas/add" };
       store.dispatch("sendUrl", ruta);
     };
-   let producto = ref ({})
-    let productos = computed(() => store.state.productosTrue);
-    let clientes = computed(() => store.state.clientesActivos);
-
-    return { producto,buscarProducto,sendUrl,selectCliente, productos,buscarClientes, clientes, cliente, dataCliente,datosCliente };
+    function preGuardarCompra() {
+      modalVenta.value = true
+    }
+    
+    function selectProducto(producto) {
+      buscarProducto.value = "";
+      inputsAgregar.value = producto;
+    }
+    function verifyStock() {
+      if (cantidad.value > inputsAgregar.value.cantidad)
+        cantidad.value = inputsAgregar.value.cantidad;
+    }
+    function agregarCarrito() {
+      const NewVenta = {
+        productName: inputsAgregar.value.nombre,
+        modelo: inputsAgregar.value.modelo,
+        marca: inputsAgregar.value.marca,
+        precio: inputsAgregar.value.precio,
+        codigo: inputsAgregar.value.codigo,
+        imei: [{value: null}],
+        cantidad: cantidad.value,
+        iva: inputsAgregar.value.iva,
+        producto_id: inputsAgregar.value._id,
+      };
+      store.dispatch("agregarToCarrito", NewVenta);
+    }
+    function cancelVenta() {
+      store.dispatch("deleteProccessVenta");
+      inputsAgregar.value = {};
+      cantidad.value = 1;
+    }
+    function guardarCompra() {
+      store.dispatch('comprar',{nota: notaVenta.value, prestamo: prestamo.value})
+    }
+    return {
+      prestamo,
+      modalVenta,
+      notaVenta,
+      preGuardarCompra,
+      guardarCompra,
+      iva,
+      totalVenta,
+      cancelVenta,
+      agregarCarrito,
+      productosVenta,
+      verifyStock,
+      total,
+      cantidad,
+      inputsAgregar,
+      selectProducto,
+      
+      buscarProducto,
+      sendUrl,
+      selectCliente,
+      productos,
+      buscarClientes,
+      clientes,
+      
+      dataCliente,
+      datosCliente,
+    };
   },
 };
 </script>
@@ -214,15 +348,16 @@ export default {
   width: 20%;
   max-height: 30vh;
 }
-@media screen and (max-width: 500px){
+@media screen and (max-width: 500px) {
   .resultado2 {
-  background: #ececec;
-  position: absolute;
-  z-index: 150;
-  border-radius: 0.5rem;
-  width: 55%;
-  max-height: 30vh;
-}}
+    background: #ececec;
+    position: absolute;
+    z-index: 150;
+    border-radius: 0.5rem;
+    width: 55%;
+    max-height: 30vh;
+  }
+}
 .scrollbar-light-blue::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
   background-color: #f5f5f5;
