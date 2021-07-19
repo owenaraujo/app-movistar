@@ -78,6 +78,12 @@
                     >{{ usuario.username }}
                   </a>
                   <div class="dropdown-divider"></div>
+
+                  <router-link class="dropdown-item" to="/configuracion">
+                    <i class="fas fa-cog fa-sm fa-fw mr-2 text-gray-600"></i
+                    >configuracion
+                  </router-link>
+                  <div class="dropdown-divider"></div>
                   <a class="dropdown-item" @click="salir()">
                     <i
                       class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-600"

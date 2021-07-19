@@ -55,13 +55,15 @@ import { createToast } from "mosha-vue-toastify";
 import { useRouter } from 'vue-router';
 export default {
   setup() {
-    let form = [
+    let form =ref(
+       [
       { value: "dni", number: true },
       { value: "nombre" },
       { value: "apellido" },
       { value: "telefono", number: true },
       { value: "direccion" },
-    ];
+    ]
+    )
     let store = useStore();
     let router = useRouter()
     let toast = computed(()=> store.state.toask)
@@ -91,6 +93,13 @@ export default {
 
 id= ''
 router.push('/clientes/add')
+ form.value = [
+      { value: "dni", number: true },
+      { value: "nombre" },
+      { value: "apellido" },
+      { value: "telefono", number: true },
+      { value: "direccion" },
+    ];
       newCliente.value = {};
       } catch (error) {
         createToast('no hay acceso al servidor')
@@ -103,7 +112,7 @@ router.push('/clientes/add')
       id = uri[1]
       let clientes = computed(()=> store.state.clientes)
 const item = clientes.value.filter(item=> item._id === id ? item : 0)
-item.length === 0 ? router.push('/clientes/add'): (newCliente.value = item[0], delete form.splice(0, 1)) 
+item.length === 0 ? router.push('/clientes/add'): (newCliente.value = item[0], delete form.value.splice(0, 1)) 
 }
    
     const ruta = computed(() => store.state.linkclientes);

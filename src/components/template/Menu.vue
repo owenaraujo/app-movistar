@@ -49,7 +49,7 @@
           aria-expanded="true"
           aria-controls="collapseTwo"
         >
-          <i class="fas fa-fw fa-cog mr-3"></i>
+          <i class="fas fa-fw fa-store mr-3"></i>
           <span>Ventas</span>
         </router-link>
         <div
@@ -79,7 +79,7 @@
           aria-expanded="true"
           aria-controls="collapseUtilities"
         >
-          <i class="fas fa-fw fa-wrench mr-3"></i>
+          <i class="fas fa-fw fa-box mr-3"></i>
           <span>Productos</span>
         </router-link>
         <div

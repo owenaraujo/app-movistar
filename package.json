@@ -12,11 +12,14 @@
     "core-js": "^3.6.5",
     "jquery": "^3.6.0",
     "jspdf": "^2.3.1",
+    "jspdf-autotable": "^3.5.15",
     "moment": "^2.29.1",
     "mosha-vue-toastify": "^1.0.13",
     "vue": "^3.0.0",
     "vue-numerals": "^4.0.6",
+    "vue-popperjs": "^2.3.0",
     "vue-router": "^4.0.0-0",
+    "vue3-popper": "^1.0.2",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {

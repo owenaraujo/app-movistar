@@ -2,11 +2,25 @@
   <tr>
     <td>{{ producto.codigo }}</td>
     <td>{{ producto.nombre }}</td>
-    <td>{{ producto.precio }}</td>
+    <td>
+     
+  <Popper
+    class="dark-popper"
+    arrow
+    hover
+    placement='right'
+    :content="numeralFormat((producto.precio*dolar)) +' Bs'"
+  >
+    <div>{{producto.precio}}</div>
+  </Popper>
+
+    </td>
     <td>{{ producto.cantidad }}</td>
 
     <td>
-      <router-link :to="'/productos/add/cantidad?'+ producto._id" class="btn btn-primary ml-2"
+      <router-link
+        :to="'/productos/add/cantidad?' + producto._id"
+        class="btn btn-primary ml-2"
         ><i class="fas fa-audio-description"></i
       ></router-link>
 
@@ -42,12 +56,16 @@ import { createToast } from "mosha-vue-toastify";
 import axios from "axios";
 import { useStore } from "vuex";
 import { computed, ref } from "@vue/runtime-core";
+import Popper from "vue3-popper";
 
 export default {
   props: ["producto"],
+  components: { Popper },
+
   setup(props) {
     let producto = ref(props.producto);
     const store = useStore();
+    let dolar = computed(()=> store.state.system.info.dolar)
     const toask = computed(() => store.state.toask);
     const api = computed(() => store.state.api);
     async function activarProducto(id) {
@@ -55,14 +73,14 @@ export default {
         `${api.value}/productos/activar/${id}`
       );
       producto.value.status = true;
-      createToast(data.value, toask.value.success);
+      createToast(data.value, toask.value.warning);
     }
     async function desactivarProducto(id) {
       const { data } = await axios.delete(`${api.value}/productos/${id}`);
       producto.value.status = false;
       createToast(data.value, toask.value.danger);
     }
-    return { activarProducto, desactivarProducto };
+    return { activarProducto, desactivarProducto , dolar};
   },
 };
 </script>

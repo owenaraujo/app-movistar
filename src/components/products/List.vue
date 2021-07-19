@@ -53,6 +53,7 @@ export default {
   setup() {
     let store = useStore();
     store.dispatch("getProductos");
+    store.dispatch("buscar");
 
     const productos = computed(() => store.state.productos);
     return { productos };

@@ -54,7 +54,7 @@ export default {
     const activarProveedor = async (id) => {
      const {data}= await axios.delete(`${api.value}/proveedores/activate/${id}`);
       store.dispatch("proveedorStatus", id);
-    createToast(data.data,toast.value.success)
+    createToast(data.data,toast.value.warning)
     };
    
     return {

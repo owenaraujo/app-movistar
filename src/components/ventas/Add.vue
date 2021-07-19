@@ -30,11 +30,7 @@
             class="form-control mb-2"
           />
           <div class="resultado" v-if="buscarClientes">
-            <select
-              multiple
-              class="custom-select scrollbar-light-blue"
-              
-            >
+            <select multiple class="custom-select scrollbar-light-blue">
               <option
                 @click="selectCliente(item)"
                 v-for="item in clientes"
@@ -59,7 +55,7 @@
         <h4 class="text-center">Datos Venta</h4>
 
         <div class="table-responsive">
-          <table class="table table-hover">
+          <table ref="table" class="table table-hover">
             <thead class="thead-dark">
               <tr>
                 <th width="100px">Código</th>
@@ -81,11 +77,7 @@
                     v-model="buscarProducto"
                   />
                   <div class="resultado2" v-if="buscarProducto">
-                    <select
-                      multiple
-                      class="custom-select scrollbar-light-blue"
-                    
-                    >
+                    <select multiple class="custom-select scrollbar-light-blue">
                       <option
                         v-for="item in productos"
                         @click="selectProducto(item)"
@@ -103,16 +95,16 @@
                   </div>
                 </td>
                 <td id="txt_descripcion">
-                  {{ inputsAgregar.modelo }}
+                  {{ inputsAgregar.modelo || "-" }}
                 </td>
-                <td id="txt_existencia">{{ inputsAgregar.cantidad }}</td>
+                <td id="txt_existencia">{{ inputsAgregar.cantidad || 0 }}</td>
                 <td>
-                  {{total -inputsAgregar.precio}}
+                  {{ total - inputsAgregar.precio || 0 }}
                 </td>
                 <td id="txt_precio" class="textright">
-                  {{ inputsAgregar.precio }}
+                  {{ inputsAgregar.precio || 0 }}
                 </td>
-                <td id="txt_precio_total" class="txtright">{{ total }}</td>
+                <td id="txt_precio_total" class="txtright">{{ total || 0 }}</td>
                 <td>
                   <button
                     @click="agregarCarrito()"
@@ -148,15 +140,44 @@
             <tfoot id="detalle_totales">
               <tr>
                 <td colspan="6" class="textright">Sub-total</td>
-                <td>{{ totalVenta }}</td>
+                <td>
+                  <Popper
+                    class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat(totalVenta * dolar, '0,00') + ' Bs'"
+                  >
+                    {{ totalVenta }}
+                  </Popper>
+                </td>
               </tr>
               <tr>
                 <td colspan="6" class="textright">iva</td>
-                <td>{{ iva }}</td>
+                <td>
+                  <Popper
+                    class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat(iva * dolar) + ' Bs'"
+                    >{{ iva }}</Popper
+                  >
+                </td>
               </tr>
               <tr>
                 <td colspan="6" class="textright">total a pagar</td>
-                <td>{{ iva + totalVenta }}</td>
+                <td>
+                  <Popper
+                    class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat((iva + totalVenta) * dolar) + ' Bs'"
+                  >
+                    {{ iva + totalVenta }}
+                  </Popper>
+                </td>
               </tr>
             </tfoot>
           </table>
@@ -164,10 +185,14 @@
         <div class="col-lg-12 text-center">
           <label>Acciones</label>
           <div class="form-group">
-            <button @click="cancelVenta()" class="btn btn-danger mr-2"
-              >Anular</button
+            <button @click="cancelVenta()" class="btn btn-danger mr-2">
+              Anular
+            </button>
+            <button
+              @click="preGuardarCompra()"
+              class="btn btn-primary"
+              id="btn_facturar_venta"
             >
-            <button @click="preGuardarCompra()" class="btn btn-primary" id="btn_facturar_venta">
               <i class="fas fa-save"></i> Generar Venta
             </button>
           </div>
@@ -176,68 +201,108 @@
     </div>
   </div>
 
+  <!-- modal -->
+  <!-- Button trigger modal -->
 
-<!-- modal -->
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">
-  Launch static backdrop modal
-</button>
+  <!-- Modal -->
+  <div v-if="modalVenta">
+    <div
+      class="modal fade show"
+      id="staticBackdrop"
+      data-backdrop="static"
+      data-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      style="display: block"
+      aria-modal="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                v-model="prestamo"
+                type="checkbox"
+                id="defaultCheck1"
+              />
+              <label class="form-check-label" for="defaultCheck1">
+                Reportar venta como prestamo
+              </label>
+            </div>
 
-<!-- Modal -->
-<div v-if="modalVenta">
-  <div class="modal fade show" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"  style="display: block" aria-modal="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-check">
-  <input class="form-check-input" v-model="prestamo" type="checkbox"  id="defaultCheck1">
-  <label class="form-check-label" for="defaultCheck1">
-    Reportar venta como prestamo
-  </label>
-</div>{{notaVenta}}
-        <label for="inputNota"></label>
-      <input v-model="notaVenta" type="text" id="inputNota" placeholder="agregar una nota" class="form-control">
-      </div>
-      <div class="modal-footer">
-        <button @click="modalVenta = false" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" @click="guardarCompra()" class="btn btn-primary">acepat</button>
+            <label for="inputNota"></label>
+            <input
+              v-model="notaVenta"
+              type="text"
+              id="inputNota"
+              placeholder="agregar una nota"
+              class="form-control"
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              @click="modalVenta = false"
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              @click="guardarCompra()"
+              class="btn btn-primary"
+            >
+              acepat
+            </button>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="modal-backdrop fade show"></div>
   </div>
-</div>
-<div class="modal-backdrop fade show"></div>
-</div>
-<!-- modal -->
-
+  <!-- modal -->
 </template>
 
 <script>
 import { useStore } from "vuex";
 import { computed, ref } from "@vue/reactivity";
 import ListProductos from "./listProductsVenta.vue";
+import Popper from "vue3-popper";
+import { createToast } from 'mosha-vue-toastify';
 export default {
   props: ["param"],
-  components: { ListProductos },
+  components: { ListProductos, Popper },
   setup() {
     //respuestas automaticas
     let store = useStore();
     store.dispatch("getProductos");
+    store.dispatch("buscar");
     store.dispatch("getClientes");
     //ref
-    let modalVenta = ref(true)
+    
+    let dolar = computed(() => store.state.system.info.dolar);
+    let modalVenta = ref(false);
     let buscarProducto = ref("");
     let inputsAgregar = ref({});
     let cantidad = ref(1);
     let buscarClientes = ref("");
     //computed
+    let toast = computed(()=> store.state.toask)
     let productosVenta = computed(() => store.state.productosVenta);
-    let notaVenta = ref('');
+    let notaVenta = ref("");
     let prestamo = ref(false);
     let total = computed(() => {
       let obj = inputsAgregar.value;
@@ -251,11 +316,21 @@ export default {
     });
     let dataCliente = computed(() => store.state.dataCliente);
     let datosCliente = computed(() => store.state.datosCliente);
-    let totalVenta = computed(()=> productosVenta.value.reduce((sum , item) =>sum + item.cantidad * item.precio, 0))
-    let iva = computed(()=> productosVenta.value.reduce((sum , item) =>sum + item.cantidad * item.precio * item.iva /100, 0))
+    let totalVenta = computed(() =>
+      productosVenta.value.reduce(
+        (sum, item) => sum + item.cantidad * item.precio,
+        0
+      )
+    );
+    let iva = computed(() =>
+      productosVenta.value.reduce(
+        (sum, item) => sum + (item.cantidad * item.precio * item.iva) / 100,
+        0
+      )
+    );
     let productos = computed(() => store.state.productosTrue);
     let clientes = computed(() => store.state.clientesActivos);
-//funciones
+    //funciones
     function selectCliente(cliente) {
       buscarClientes.value = "";
 
@@ -266,9 +341,26 @@ export default {
       store.dispatch("sendUrl", ruta);
     };
     function preGuardarCompra() {
-      modalVenta.value = true
+      if(!dataCliente.value) return createToast('especifique un cliente', toast.value.warning)
+      if(productosVenta.value.length ==0) return createToast('no se puede hacer una venta vacia', toast.value.warning)
+      let producto = productosVenta.value.map(item =>{
+        let imei = item.imei.map(e=>{ 
+          if(e.value) return true
+          else{ 
+            e.value = ''
+           return false}
+          }
+        
+        )
+        if (imei.indexOf(false) != -1) {
+          return false
+        }
+        else{ return true}
+      })
+      if(producto.indexOf(false) != -1) return createToast('el campo imei no puede estar vacio', toast.value.warning)
+      modalVenta.value = true;
     }
-    
+
     function selectProducto(producto) {
       buscarProducto.value = "";
       inputsAgregar.value = producto;
@@ -284,7 +376,7 @@ export default {
         marca: inputsAgregar.value.marca,
         precio: inputsAgregar.value.precio,
         codigo: inputsAgregar.value.codigo,
-        imei: [{value: null}],
+        imei: [{ value: null }],
         cantidad: cantidad.value,
         iva: inputsAgregar.value.iva,
         producto_id: inputsAgregar.value._id,
@@ -296,10 +388,16 @@ export default {
       inputsAgregar.value = {};
       cantidad.value = 1;
     }
+
     function guardarCompra() {
-      store.dispatch('comprar',{nota: notaVenta.value, prestamo: prestamo.value})
+      // store.dispatch('generarPdf')
+      store.dispatch("comprar", {
+        nota: notaVenta.value,
+        prestamo: prestamo.value,
+      });
     }
     return {
+      dolar,
       prestamo,
       modalVenta,
       notaVenta,
@@ -315,14 +413,14 @@ export default {
       cantidad,
       inputsAgregar,
       selectProducto,
-      
+
       buscarProducto,
       sendUrl,
       selectCliente,
       productos,
       buscarClientes,
       clientes,
-      
+
       dataCliente,
       datosCliente,
     };
