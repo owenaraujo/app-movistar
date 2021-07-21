@@ -216,13 +216,14 @@
       style="display: block"
       aria-modal="true"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-center">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
             <button
               type="button"
               class="close"
+              @click="modalVenta = false"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -230,7 +231,8 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="form-check">
+           <div v-if="!statusVenta">
+              <div class="form-check">
               <input
                 class="form-check-input"
                 v-model="prestamo"
@@ -250,22 +252,32 @@
               placeholder="agregar una nota"
               class="form-control"
             />
+           </div>
+           <div v-if="statusVenta" class="text-center">
+<p>
+            <strong class="mt-4">que desea hacer?</strong> 
+
+</p>
+            <br>
+             <button @click="newVenta" class="btn btn-primary mr-2">registrar otra venta</button>
+             <button @click="generarPdf" class="btn btn-success">inprimir factura</button>
+           </div>
           </div>
           <div class="modal-footer">
             <button
               @click="modalVenta = false"
-              type="button"
+              
               class="btn btn-secondary"
               data-dismiss="modal"
             >
-              Close
+              Cerrar
             </button>
             <button
-              type="button"
+              
               @click="guardarCompra()"
               class="btn btn-primary"
             >
-              acepat
+              Comprar
             </button>
           </div>
         </div>
@@ -302,6 +314,7 @@ export default {
     //computed
     let toast = computed(()=> store.state.toask)
     let productosVenta = computed(() => store.state.productosVenta);
+    let statusVenta = computed(()=> store.state.statusVenta)
     let notaVenta = ref("");
     let prestamo = ref(false);
     let total = computed(() => {
@@ -331,6 +344,13 @@ export default {
     let productos = computed(() => store.state.productosTrue);
     let clientes = computed(() => store.state.clientesActivos);
     //funciones
+    function newVenta(){
+      store.dispatch("vaciarVenta")
+      notaVenta.value = ''
+      prestamo.value = false
+      modalVenta.value = false
+
+      }
     function selectCliente(cliente) {
       buscarClientes.value = "";
 
@@ -389,6 +409,9 @@ export default {
       cantidad.value = 1;
     }
 
+function generarPdf() {
+  store.dispatch("generarPdf")
+}
     function guardarCompra() {
       // store.dispatch('generarPdf')
       store.dispatch("comprar", {
@@ -397,6 +420,9 @@ export default {
       });
     }
     return {
+      newVenta,
+      generarPdf,
+      statusVenta,
       dolar,
       prestamo,
       modalVenta,

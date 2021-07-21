@@ -1,9 +1,10 @@
 <template>
- 
+
   <div class="container-fluid mt-2 mb-2">
+
     <!-- Content Row -->
     <div class="row">
-      
+      <!-- <button  @click="pdf">click aqui</button> -->
       <div class="col-lg-6 m-auto">
         <div class="card-header text-center bg-primary text-white">
           configuracion del sistema
@@ -44,7 +45,10 @@ export default {
       const {data} = await axios.post(`${api.value}/system/${informacion.value.id}`, info.value.info)
       createToast(data.value, toast.value.success)
     }
-    return { info, save, informacion };
+    function pdf() {
+      store.dispatch("generarPdf")
+    }
+    return { pdf, info, save, informacion };
   },
 };
 </script>

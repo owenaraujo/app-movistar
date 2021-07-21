@@ -3,6 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
+      path: "/prueba",
+      name: "prueba",
+      meta: { title: 'prueba' },
+
+      component: () => import("../components/Prueba.vue"),
+    },
+  {
       path: "/",
       name: "index",
       meta: { title: 'index' },
