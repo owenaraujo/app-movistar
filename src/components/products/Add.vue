@@ -84,7 +84,7 @@ export default {
     store.dispatch("getProveedores");
     const proveedores = computed(() => store.state.proveedores);
     let token = computed(()=> store.state.token)
-    const form = [
+    const form = ref([
       { valor: "nombre" },
       { valor: "marca" },
       { valor: "modelo" },
@@ -93,7 +93,7 @@ export default {
       { valor: "precio", number: true },
       { valor: "codigo" },
       { valor: "iva", number: true },
-    ];
+    ])
     let id = "";
     let producto = ref({
       proveedor_id: null,
@@ -166,7 +166,7 @@ export default {
           id = uri[1];
           const res = value.filter((item) => (item._id === id ? item : false));
 
-          !res ? (producto.value = {}) : (producto.value = res[0]);
+          !res ? (producto.value = {}) : (producto.value = res[0], delete form.value.splice(4, 2) );
         }
       } catch (error) {
         0;

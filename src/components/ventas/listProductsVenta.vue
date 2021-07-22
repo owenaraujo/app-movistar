@@ -25,9 +25,30 @@
       </div>
     </th>
     <th>{{ producto.cantidad }}</th>
-    <th>{{ producto.precio }}</th>
+    
+    <th>
+      <Popper
+                    class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat((producto.precio) * dolar) + ' Bs'"
+                  >
+                  {{ producto.precio }} (+{{producto.iva}}% iva)
+                  </Popper>
+      </th>
 
-    <th>{{ total }}</th>
+    <th>
+      <Popper
+                    class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat((total) * dolar) + ' Bs'"
+                  >
+                    {{ total }}
+                  </Popper>
+    </th>
     <th>
       <button @click="deleteProduct(indice)" class="btn btn-danger">
         <i class="svg-inline--fa fas fa-trash-alt fa-w-14"></i> Eliminar
@@ -38,11 +59,16 @@
 <script>
 import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
+import Popper from "vue3-popper";
+
 export default {
   props: ["producto", "indice"],
+  components:{Popper},
   setup(props) {
     const store = useStore();
     let Producto = ref(props.producto);
+    let dolar = computed(() => store.state.system.info.dolar);
+
     let total = computed(() => {
       let obj = Producto.value;
       let iva = ((obj.precio * obj.iva) / 100) * obj.cantidad;
@@ -63,7 +89,7 @@ export default {
     function deleteProduct(indice) {
       store.dispatch("deleteStore", indice);
     }
-    return { total, deleteProduct, Producto, deleteOneItem };
+    return { total, dolar ,deleteProduct, Producto, deleteOneItem };
   },
 };
 </script>

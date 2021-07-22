@@ -3,7 +3,22 @@ import jsPDF from "jspdf";
 import axios from "axios";
 import moment from "moment";
 import numeralFormat from 'numeral'
+// load a locale
+numeralFormat.register('locale', 'es', {
+  delimiters: {
+      thousands: '.',
+      decimal: ','
+  },
+  ordinal : function (number) {
+      return number === 1 ? 'er' : 'ème';
+  },
+  currency: {
+      symbol: '€'
+  }
+});
 
+// switch between locales
+numeralFormat.locale('es');
 import "jspdf-autotable";
 import { createToast } from "mosha-vue-toastify";
 export default createStore({
@@ -341,6 +356,7 @@ state.ventaActual =productos
       state.productosVenta = [];
       state.datosCliente = {};
       state.dataCliente = false;
+      state.statusVenta = false
       state.ventaActual = {};
     },
     generarPdf({ state } ) {
@@ -387,26 +403,29 @@ state.ventaActual =productos
       doc.text(`Condicion:   contado`, 120, 44);
 
       //body factura                            
+
      let position = 55
       for (let i = 0; i < productos.length; i++) {
         const element = productos[i];
+        let newIva = ''
+        if(!element.iva) newIva = `(e)`
         doc.text(`${element.producto_id.codigo}`, 17,position)
         doc.text(`${element.producto_id.marca}-${element.producto_id.modelo}`, 42,position)
         doc.text(`${element.cantidad}`, 125,position)
-        doc.text(`${element.precio }`, 140,position)
-        doc.text(`${element.cantidad *element.precio}`, 182,position)
+        doc.text(`${numeralFormat(element.precio *datos.dolar).format('0,0')}`, 135,position)
+        doc.text(`${numeralFormat((element.cantidad *element.precio) * datos.dolar).format("0,0")}${newIva}`, 182,position)
         position =position + 5
         
       }
       //footer factura
 
-      doc.text(`Total factura :`, 135, 115);
-      doc.text(`${total}`, 200, 115, {align: "right"});
-      doc.text(`IVA :`, 135, 112);
-      doc.text(`${iva}`, 200, 112, {align: "right"});
+      doc.text(`Total factura :`, 135, 112);
+      doc.text(` ${numeralFormat( total*datos.dolar).format('0,0')}`, 200, 112, {align: "right"});
+      doc.text(`IVA :`, 135, 109);
+      doc.text(`${numeralFormat(iva* datos.dolar).format('0,0')}`, 200, 109, {align: "right"});
       
-      doc.text(`Descuento :`, 135, 109);
-      doc.text(`0%`, 200, 109, {align: "right"});
+      doc.text(`Total Factura($USD) :`, 135, 115);
+      doc.text(`${total}$`, 200, 115, {align: "right"});
       doc.text(`Observaciones:`, 10, 109);
       var text=`${datos.nota}`
       doc.text(text, 35, 109, {align: 'justify',lineHeightFactor: 1,maxWidth:95});

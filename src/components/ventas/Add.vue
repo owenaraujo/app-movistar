@@ -99,12 +99,44 @@
                 </td>
                 <td id="txt_existencia">{{ inputsAgregar.cantidad || 0 }}</td>
                 <td>
-                  {{ total - inputsAgregar.precio || 0 }}
+                  <Popper
+                    class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat( (total - inputsAgregar.precio )* dolar|| 0  ) + ' Bs'"
+                  >
+                  {{ total - inputsAgregar.precio || 0 }}$
+                  </Popper>
+                  
                 </td>
                 <td id="txt_precio" class="textright">
-                  {{ inputsAgregar.precio || 0 }}
+                   <Popper
+                    class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat( (inputsAgregar.precio )* dolar|| 0  ) + ' Bs'"
+                  >
+                   {{ inputsAgregar.precio || 0 }}$(+{{inputsAgregar.iva}}% iva )
+                  </Popper>
+                 
                 </td>
-                <td id="txt_precio_total" class="txtright">{{ total || 0 }}</td>
+                <td id="txt_precio_total" class="txtright">
+
+                  <Popper
+                    class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat( (total )* dolar|| 0  ) + ' Bs'"
+                  >
+                   {{ total || 0 }}$
+                  </Popper>
+                  
+                  
+                  
+                  </td>
                 <td>
                   <button
                     @click="agregarCarrito()"
