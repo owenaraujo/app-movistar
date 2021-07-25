@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div v-if="usuario.rol.grado <= 2" class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800 text-center">Panel de Administración</h1>
@@ -108,19 +108,22 @@
       </div>
     </div>
   </div>
+  <NoAccess v-else/>
 </template>
 
 <script>
 import { computed, ref } from "@vue/runtime-core";
+import NoAccess from "../403.vue"
 import { useStore } from "vuex";
 import axios from "axios";
 import List from "./ventasList.vue";
 export default {
   props: ["param"],
-  components: { List },
+  components: { List , NoAccess},
   setup() {
     let store = useStore();
     let api = computed(() => store.state.api);
+    let usuario = computed(() => store.state.usuario);
     let ventas = ref([]);
     let limit = ref(10);
     let page = ref(1);
@@ -163,7 +166,7 @@ export default {
       }
     }
     get();
-    return { ventas, lista, limit, page, getPage, previous, next, limitar };
+    return { ventas, lista, limit, page, getPage, previous, next, limitar, usuario };
   },
 };
 </script>

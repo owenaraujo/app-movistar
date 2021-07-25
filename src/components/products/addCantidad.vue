@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div v-if="usuario.rol.grado <=1" class="container-fluid">
     <div class="row">
       <div class="col-lg-6 m-auto">
         <form autocomplete="off">
@@ -52,15 +52,18 @@
       </div>
     </div>
   </div>
+  <NoAccess v-else></NoAccess>
 </template>
 <script>
 import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import NoAccess from '../403.vue'
 import axios from "axios";
 import { createToast } from "mosha-vue-toastify";
 export default {
   props: ["param"],
+  components:{NoAccess}, 
   setup() {
     let router = useRouter();
     let newDate = ref({ cantidad: null, precio: null });
@@ -87,6 +90,7 @@ export default {
       }
     }
     let api = computed(() => store.state.api);
+    let usuario = computed(() => store.state.usuario);
     create();
     let toast = computed(() => store.state.toask);
     async function update() {
@@ -115,7 +119,7 @@ export default {
         
       }
     }
-    return { uri, info, newDate, update };
+    return { uri, info, newDate, update , usuario};
   },
 };
 </script>

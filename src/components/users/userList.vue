@@ -37,14 +37,15 @@ export default {
       let usuario= ref(props.usuario)
       let store = useStore()
     let toast = computed(()=> store.state.toask)
+    let token = computed(()=> store.state.token)
     let api = computed(()=> store.state.api)
       async function desactivar (id){
-const {data} = await axios.delete(`${api.value}/usuarios/${id}`)
+const {data} = await axios.delete(`${api.value}/usuarios/${id}`, {headers:{xtoken:token.value}})
 data.status ===true ? (usuario.value.status = false, createToast(data.value,  toast.value.danger)): createToast(data.value,  toast.value.warning)
 
       }
       async function activar (id){
-const {data} = await axios.delete(`${api.value}/usuarios/activar/${id}`)
+const {data} = await axios.delete(`${api.value}/usuarios/activar/${id}` , {headers:{xtoken:token.value}})
 usuario.value.status = true
 createToast(data.value, toast.value.success)
       }

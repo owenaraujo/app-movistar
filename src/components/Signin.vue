@@ -64,13 +64,14 @@ import { createToast } from 'mosha-vue-toastify';
 export default {
   setup() {
     const store = useStore();
+let api = computed(()=> store.state.api)
     let toast = computed(()=>store.state.toask)
     const usuario = ref({ password: "", username: "" });
     const usuarios = computed (()=> store.state.usuarios)
     const loger =async () => {
       try {
         
-const {data} = await axios.post('http://192.168.137.1:3000/api/usuarios/login', usuario.value)
+const {data} = await axios.post(`${api.value}/usuarios/login`, usuario.value)
 if(data.status){ return store.dispatch("login", data)
 
 

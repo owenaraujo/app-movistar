@@ -1,6 +1,6 @@
 <template>
   
-  <div class="container-fluid mt-2 mb-2">
+  <div v-if="user.rol.grado <= 1" class="container-fluid mt-2 mb-2">
     <!-- Content Row -->
     <div class="row">
       <div class="col-lg-6 m-auto">
@@ -43,22 +43,26 @@
       </div>
     </div>
   </div>
+  <NoAccess v-else/>
 </template>
 
 <script>
 import axios from "axios";
 import { useStore } from "vuex";
+import NoAccess from '../403.vue'
 import { ref } from "@vue/reactivity";
 import { computed } from "@vue/runtime-core";
 import {useRouter} from "vue-router"
 import { createToast } from 'mosha-vue-toastify';
 export default {
   props:['param'],
+  components:{NoAccess},
   setup() {
     const store = useStore();
     let router = useRouter()
     const api = computed(() => store.state.api);
     let toast = computed(()=> store.state.toask)
+    let token = computed(()=> store.state.token)
     const form = [
       { value: "nombre", type: String },
       { value: "rif", type: Number },
@@ -92,7 +96,7 @@ export default {
       if (!value.direccion) return (value.direccion = "");
       const { data } = await axios.post(
         `${api.value}/proveedores${id}`,
-        NewProveedor.value
+        NewProveedor.value, {headers:{xtoken:token.value}}
       );
       if (data.status) {
         
@@ -107,8 +111,10 @@ export default {
       }
       
     };
+    let user = computed(()=>store.state.usuario)
 
     return {
+      user,
       api,
       save,
       form,

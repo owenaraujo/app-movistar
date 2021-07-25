@@ -43,12 +43,13 @@ export default {
   setup(props) {
     let store = useStore();
     let toast = computed(() => store.state.toask);
+    let token = computed(() => store.state.token);
     let cliente = ref(props.cliente);
     let api = computed(() => store.state.api);
     async function activar() {
       try {
         const { data } = await axios.delete(
-          `${api.value}/clientes/activar/${props.cliente._id}`
+          `${api.value}/clientes/activar/${props.cliente._id}`, {headers:{xtoken:token.value}}
         );
         data.status
           ? (cliente.value.status = true,
@@ -61,7 +62,7 @@ export default {
     async function desactivar() {
       try {
         const { data } = await axios.delete(
-          `${api.value}/clientes/${props.cliente._id}`
+          `${api.value}/clientes/${props.cliente._id}`, {headers:{xtoken:token.value}}
         );
         data.status
           ? (cliente.value.status = false,

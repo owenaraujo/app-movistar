@@ -1,18 +1,18 @@
 <template>
-    <div  style="height: 78vh" id="layoutError">
+    <div  style="height: 70vh" id="layoutError">
             <div id="layoutError_content">
                 <main>
                     <div class="container">
-                        <div class="row justify-content-center">
+                        <div class="row mt-5 justify-content-center">
                             <div class="col-lg-6">
                                 <div class="text-center mt-4">
-                                    <h1 class="display-1">401</h1>
+                                    <h1 class="display-1">403</h1>
                                     <p class="lead">sin autorizacion</p>
-                                    <p>Access to this resource is denied.</p>
-                                    <a href="index.html">
+                                    <p>su acceso a esta area no esta permitido.</p>
+                                    <router-link to="/">
                                         <i class="fas fa-arrow-left me-1"></i>
-                                        Return to Dashboard
-                                    </a>
+                                        regresar al inicio
+                                    </router-link>
                                 </div>
                             </div>
                         </div>

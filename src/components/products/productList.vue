@@ -17,7 +17,7 @@
     </td>
     <td>{{ producto.cantidad }}</td>
 
-    <td>
+    <td v-if="access <= 1">
       <router-link
         :to="'/productos/add/cantidad?' + producto._id"
         class="btn btn-primary ml-2"
@@ -59,7 +59,7 @@ import { computed, ref } from "@vue/runtime-core";
 import Popper from "vue3-popper";
 
 export default {
-  props: ["producto"],
+  props: ["producto", 'access'],
   components: { Popper },
 
   setup(props) {
@@ -67,16 +67,17 @@ export default {
     const store = useStore();
     let dolar = computed(()=> store.state.system.info.dolar)
     const toask = computed(() => store.state.toask);
+    const token = computed(() => store.state.token);
     const api = computed(() => store.state.api);
     async function activarProducto(id) {
       const { data } = await axios.delete(
-        `${api.value}/productos/activar/${id}`
+        `${api.value}/productos/activar/${id}`, {headers:{xtoken:token.value}}
       );
       producto.value.status = true;
       createToast(data.value, toask.value.warning);
     }
     async function desactivarProducto(id) {
-      const { data } = await axios.delete(`${api.value}/productos/${id}`);
+      const { data } = await axios.delete(`${api.value}/productos/${id}`, {headers:{xtoken:token.value}});
       producto.value.status = false;
       createToast(data.value, toask.value.danger);
     }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div v-if="usuario.rol.grado <= 2" class="container-fluid">
 
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -50,15 +50,18 @@
 
 
 </div>
+<NoAccess v-else/> 
 </template>
 
 <script>
+import NoAccess from '../403.vue'
 import Lista from './clientesList.vue'
 import {useStore} from 'vuex'
 import { computed } from '@vue/runtime-core'
 export default {
 	props:['param'], 
 	components:{
+ NoAccess,
 Lista
 	},
 setup(){
@@ -66,12 +69,13 @@ setup(){
 
 	store.dispatch('getClientes')
 const clientes = computed (()=>store.state.clientes)
+let usuario = computed (()=>store.state.usuario)
 	const sendUrl = ()=>{
         const ruta = {ruta :"/clientes"}
         store.dispatch('sendUrl', ruta)
 
     }
-	return{sendUrl, clientes}
+	return{sendUrl, clientes, usuario}
 }
 }
 </script>

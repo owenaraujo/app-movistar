@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div v-if="usuario.rol.grado <= 2" class="container-fluid">
     <div class="text-right">
       <router-link
         to="/clientes/add"
@@ -106,7 +106,7 @@
                     placement="left"
                     :content="numeralFormat( (total - inputsAgregar.precio )* dolar|| 0  ) + ' Bs'"
                   >
-                  {{ total - inputsAgregar.precio || 0 }}$
+                  {{numeralFormat( total - inputsAgregar.precio, "0,0.0") || 0 }}$
                   </Popper>
                   
                 </td>
@@ -233,6 +233,7 @@
     </div>
   </div>
 
+<NoAccess v-else/>
   <!-- modal -->
   <!-- Button trigger modal -->
 
@@ -321,6 +322,7 @@
 </template>
 
 <script>
+import NoAccess from '../403.vue'
 import { useStore } from "vuex";
 import { computed, ref } from "@vue/reactivity";
 import ListProductos from "./listProductsVenta.vue";
@@ -328,7 +330,7 @@ import Popper from "vue3-popper";
 import { createToast } from 'mosha-vue-toastify';
 export default {
   props: ["param"],
-  components: { ListProductos, Popper },
+  components: { ListProductos, Popper, NoAccess },
   setup() {
     //respuestas automaticas
     let store = useStore();
@@ -345,6 +347,7 @@ export default {
     let buscarClientes = ref("");
     //computed
     let toast = computed(()=> store.state.toask)
+    let usuario = computed(()=> store.state.usuario)
     let productosVenta = computed(() => store.state.productosVenta);
     let statusVenta = computed(()=> store.state.statusVenta)
     let notaVenta = ref("");
@@ -452,6 +455,7 @@ function generarPdf() {
       });
     }
     return {
+      usuario,
       newVenta,
       generarPdf,
       statusVenta,

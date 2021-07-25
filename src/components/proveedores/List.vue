@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div v-if="usuario.rol.grado <=2" class="container-fluid">
 
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -17,12 +17,12 @@
 							<th>PROVEEDOR</th>
 							<th>TELEFONO</th>
 							<th>DIRECCION</th>
-							<th>ACCIONES</th>
+							<th v-if="usuario.rol.grado <=1">ACCIONES</th>
 							
 						</tr>
 					</thead>
 					<tbody>
-						<List v-show="proveedor.nombre.toLowerCase().indexOf(param.toLowerCase()) !== -1||
+						<List :access ="usuario.rol.grado" v-show="proveedor.nombre.toLowerCase().indexOf(param.toLowerCase()) !== -1||
   proveedor.rif.toLowerCase().indexOf(param.toLowerCase()) !== -1" v-for="proveedor in proveedores" :proveedor="proveedor" :key="proveedor._id"/>
 					</tbody>
 
@@ -34,22 +34,24 @@
 
 
 </div>
+<NoAccess v-else/>
 </template>
 
 <script>
 import List from "./proveedoresList.vue"
 import { useStore} from 'vuex'
+import NoAccess from '../403.vue'
 import { computed } from '@vue/runtime-core'
 export default {
-	components:{List},
+	components:{List, NoAccess},
 	props:['param'],
 setup(){
 	const store = useStore()
-	
+	let usuario = computed(()=> store.state.usuario)
 		store.dispatch('getProveedores')
 	
 	const proveedores = computed(()=> store.state.proveedores)
-	return{proveedores}
+	return{proveedores, usuario}
 }
 }
 

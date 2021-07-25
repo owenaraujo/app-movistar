@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div v-if="usuario.rol.grado <=2" class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
@@ -45,15 +45,18 @@
       </div>
     </div>
   </div>
+  <NoAccess v-else/>
 </template>
 
 <script>
 import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
+import NoAccess from '../403.vue'
 import axios from "axios";
 import { createToast } from "mosha-vue-toastify";
 import { useRouter } from 'vue-router';
 export default {
+  components:{NoAccess},
   setup() {
     let form =ref(
        [
@@ -67,6 +70,7 @@ export default {
     let store = useStore();
     let router = useRouter()
     let toast = computed(()=> store.state.toask)
+    let token = computed(()=> store.state.token)
     let newCliente = ref({
       dni: null,
       nombre: null,
@@ -86,7 +90,7 @@ export default {
       if (!value.direccion) return (value.direccion = "");
       value.user_id = usuario.value._id;
       newCliente.value.boton = true;
-      const { data } = await axios.post(`${api.value}/clientes/${id}`, value);
+      const { data } = await axios.post(`${api.value}/clientes/${id}`, value, {headers:{xtoken:token.value}});
       newCliente.value.boton = false;
       if (data.status == false || data.status === null)  return createToast(data.value, toast.value.danger);
       createToast(data.value, toast.value.success);
@@ -117,6 +121,7 @@ item.length === 0 ? router.push('/clientes/add'): (newCliente.value = item[0], d
    
     const ruta = computed(() => store.state.linkclientes);
     return {
+      usuario,
       ruta,
       newCliente,
       form,

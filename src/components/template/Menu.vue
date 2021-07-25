@@ -40,7 +40,7 @@
       <div class="sidebar-heading">Interface</div>
 
       <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
+      <li  v-if="user.rol.grado <=2" class="nav-item">
         <router-link
           class="nav-link collapsed"
           to="#"
@@ -89,7 +89,7 @@
           data-parent="#accordionSidebar"
         >
           <div class="bg-white py-2 collapse-inner rounded">
-            <router-link class="collapse-item" to="/productos/add"
+            <router-link  v-if="user.rol.grado <=1" class="collapse-item" to="/productos/add"
               >Nuevo Producto</router-link
             >
             <router-link class="collapse-item" to="/productos"
@@ -100,7 +100,7 @@
       </li>
 
       <!-- Nav Item - Clientes Collapse Menu -->
-      <li class="nav-item">
+      <li class="nav-item" v-if="user.rol.grado <=2">
         <router-link
           class="nav-link collapsed"
           to="#"
@@ -128,8 +128,8 @@
           </div>
         </div>
       </li>
-      <!-- Nav Item - Utilities Collapse Menu -->
-      <li class="nav-item">
+      <!-- Nav Item - proveedores Collapse Menu -->
+      <li class="nav-item" v-if="user.rol.grado <=2">
         <router-link
           class="nav-link collapsed"
           to="#"
@@ -148,7 +148,7 @@
           data-parent="#accordionSidebar"
         >
           <div class="bg-white py-2 collapse-inner rounded">
-            <router-link class="collapse-item" to="/proveedores/add"
+            <router-link v-if="user.rol.grado <=1" class="collapse-item" to="/proveedores/add"
               >Nuevo Proveedor</router-link
             >
             <router-link class="collapse-item" to="/proveedores"
@@ -159,7 +159,7 @@
       </li>
 
       <!-- Nav Item - Usuarios Collapse Menu -->
-      <li class="nav-item">
+      <li class="nav-item" v-if="user.rol.grado <=1">
         <router-link
           class="nav-link collapsed"
           to="#"
@@ -171,6 +171,7 @@
           <i class="fas fa-user mr-3"></i>
           <span>Usuarios</span>
         </router-link>
+       
         <div
           id="collapseUsuarios"
           class="collapse"
@@ -198,7 +199,9 @@ export default {
   setup() {
     const store = useStore();
     const sidebars = computed(() => store.state.sidebars);
-    return { sidebars };
+    let user = computed(()=>store.state.usuario)
+    return { sidebars, user};
+   
   },
 };
 </script>

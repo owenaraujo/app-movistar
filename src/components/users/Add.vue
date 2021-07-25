@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div v-if="user.rol.grado <=1" class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
@@ -92,16 +92,18 @@
       </div>
     </div>
   </div>
+<NoAccess v-else/>
 </template>
-
 <script>
 import { computed, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import NoAccess from '../403.vue'
 import { createToast } from "mosha-vue-toastify";
 export default {
   props: ["param"],
+  components:{NoAccess},
   setup() {
     let store = useStore();
     let toast = computed(()=> store.state.toask)
@@ -135,6 +137,8 @@ export default {
     }
     buscarUser()
     let api = computed(() => store.state.api);
+    let token = computed(() => store.state.token
+    );
     async function save() {
 
       try { 
@@ -145,7 +149,7 @@ export default {
         if (usuario.password != usuario.verifyPassword)
           return (usuario.password = "");
         if (!usuario.rol) return (usuario.rol = "");
-        const { data } = await axios.post(`${api.value}/usuarios/${id}`, usuario);
+        const { data } = await axios.post(`${api.value}/usuarios/${id}`, usuario, {headers:{xtoken:token.value}});
         if (data.status) {
           createToast(data.value, toast.value.success);
           router.push("/usuarios");
@@ -168,8 +172,9 @@ export default {
       }
     }
     getRoles();
+    let user = computed(()=> store.state.usuario)
     
-    return { newUser, save, roles };
+    return { newUser, save, roles , user};
   },
 };
 </script>

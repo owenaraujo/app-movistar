@@ -79,7 +79,7 @@
                   </a>
                   <div class="dropdown-divider"></div>
 
-                  <router-link class="dropdown-item" to="/configuracion">
+                  <router-link v-if="usuario.rol.grado <=1" class="dropdown-item" to="/configuracion">
                     <i class="fas fa-cog fa-sm fa-fw mr-2 text-gray-600"></i
                     >configuracion
                   </router-link>
@@ -104,9 +104,15 @@
 
             <footer class="sticky-footer bg-white">
               <div class="container my-auto">
+               
                 <div class="copyright text-center my-auto">
-                  <span>Copyright &copy; Serious Programming</span>
-                </div>
+                <Popper  class="dark-popper"
+                    arrow
+                    hover
+                    placement="left"
+                    :content="numeralFormat(dolar.info.dolar,'0,0' )+ 'bs'">   <span>Copyright &copy; Serious Programming</span>
+            </Popper>     </div>
+               
               </div>
             </footer>
             <!-- End of Footer -->
@@ -116,7 +122,7 @@
       </div>
     </div>
     <!-- End of Page Wrapper -->
-
+{
     <!-- Scroll to Top Button-->
 
     <!-- Logout Modal-->
@@ -165,12 +171,15 @@ import moment from "moment";
 
 import Menu from "./Menu.vue";
 import { useStore } from "vuex";
+import Popper from 'vue3-popper'
 import { computed, ref } from "@vue/runtime-core";
 export default {
-  components: { Menu },
+  components: { Menu , Popper},
   setup() {
     const store = useStore();
+
     let usuario = computed(() => store.state.usuario);
+    let dolar = computed(() => store.state.system);
     const salir = () => {
       store.dispatch("logout");
     };
@@ -194,7 +203,7 @@ export default {
     };
     timeAgo();
 
-    return { time, search, cambiarSidebar, salir, usuario };
+    return { time, search, cambiarSidebar, salir, usuario , dolar};
   },
 };
 </script>

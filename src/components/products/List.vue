@@ -19,11 +19,11 @@
                 <th>PRECIO</th>
                 <th>STOCK</th>
 
-                <th>ACCIONES</th>
+                <th v-if="usuario.rol.grado <= 1">ACCIONES</th>
               </tr>
             </thead>
             <tbody>
-              <Lista
+              <Lista :access="usuario.rol.grado"
                 v-show="
                   producto.codigo.toLowerCase().indexOf(param.toLowerCase()) !=
                     -1 ||
@@ -51,12 +51,13 @@ export default {
   props: ["param"],
   components: { Lista },
   setup() {
+    
     let store = useStore();
     store.dispatch("getProductos");
     store.dispatch("buscar");
-
+let usuario = computed(()=> store.state.usuario)
     const productos = computed(() => store.state.productos);
-    return { productos };
+    return { productos , usuario};
   },
 };
 </script>

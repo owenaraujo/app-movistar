@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="usuario.rol.grado <=1">
     
     <div class="container-fluid mt-2">
       <!-- Page Heading -->
@@ -54,7 +54,11 @@
                 class="form-control"
               />
             </div>
-
+             
+            <div  class="form-check mb-4"> 
+<input  class="form-check-input " v-model="producto.iva" type="checkbox" id="iva">
+              <label for="iva" class="form-check-label">iva 16%</label>
+            </div>
             <button
               @click.prevent="sendProduct()"
               value=""
@@ -67,6 +71,7 @@
       </div>
     </div>
   </div>
+  <NoAccess v-else />
 </template>
 
 <script>
@@ -76,11 +81,14 @@ import { createToast } from "mosha-vue-toastify";
 import { useRouter } from "vue-router";
 import { computed } from "@vue/runtime-core";
 import axios from "axios";
+import NoAccess from '../403.vue'
 export default {
+  components:{NoAccess},
   setup() {
     const toask = computed(() => store.state.toask);
     const store = useStore();
     const router = useRouter();
+    
     store.dispatch("getProveedores");
     const proveedores = computed(() => store.state.proveedores);
     let token = computed(()=> store.state.token)
@@ -92,7 +100,7 @@ export default {
       { valor: "cantidad", number: true },
       { valor: "precio", number: true },
       { valor: "codigo" },
-      { valor: "iva", number: true },
+     
     ])
     let id = "";
     let producto = ref({
@@ -134,6 +142,14 @@ export default {
           producto.value.codigo = "";
           return;
         }
+        if (!producto.value.iva) {
+          producto.value.iva = 0
+          
+        }
+        if (producto.value.iva) {
+          producto.value.iva = 16
+          
+        }
         const { data } = await axios.post(
           `${api.value}/productos/${id}`,
           producto.value, {headers:{xtoken:token.value}}
@@ -166,14 +182,15 @@ export default {
           id = uri[1];
           const res = value.filter((item) => (item._id === id ? item : false));
 
-          !res ? (producto.value = {}) : (producto.value = res[0], delete form.value.splice(4, 2) );
+          !res ? (producto.value = {}) : (producto.value = res[0], !res[0].iva?res[0].iva =false : res[0].iva = true  ,delete form.value.splice(4, 2) );
         }
       } catch (error) {
         0;
       }
     }
     buscarProduct();
-    return { producto, form, sendProduct, proveedores, token };
+    let usuario = computed(()=>store.state.usuario)
+    return { producto, form, sendProduct, proveedores, token , usuario};
   },
 };
 </script>
