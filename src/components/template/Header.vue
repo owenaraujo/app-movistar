@@ -30,7 +30,7 @@
             <div class="input-group">
               <h6>Sistema de Venta</h6>
 
-              <p class="ml-auto">
+              <p class="ml-auto sm-d-none">
                 <strong>Venezuela,{{ time }} </strong>
               </p>
             </div>
@@ -222,7 +222,11 @@ export default {
   width: 10px;
   background-color: #f5f5f5;
 }
-
+@media screen and (max-width: 700px) {
+  .sm-d-none{
+    display: none;
+  }
+}
 .scrollbar-light-blue::-webkit-scrollbar-thumb {
   border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);

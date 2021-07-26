@@ -21,4 +21,19 @@
             </div>
            
         </div>
+        <button @click="alert"></button>
 </template>
+<script>
+export default {
+    setup(){
+        function alert() {
+          let  array = 40000
+            for (let i = 0; i < array; i++) {
+               console.log('hola')
+                
+            }
+        }
+        return{alert}
+    }
+}
+</script>

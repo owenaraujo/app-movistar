@@ -94,12 +94,14 @@ export default createStore({
       try {
         if (localStorage.token && localStorage.id) {
           state.token = localStorage.token;
-          const token =await axios.get(`${state.api}/system/VerifyToken`,{headers:{xtoken : state.token}})
-         if(!token.data.status) return createToast(token.data.value)
+          const token = await axios.get(`${state.api}/system/VerifyToken`, {
+            headers: { xtoken: state.token },
+          });
+          if (!token.data.status) return createToast(token.data.value);
           const { data } = await axios.get(
             `${state.api}/usuarios/${localStorage.id}`
           );
-          
+
           if (data.status === null) {
             createToast(data.value);
             localStorage.token = "";
@@ -108,7 +110,10 @@ export default createStore({
           }
           state.usuario = data;
           state.logged = true;
-          createToast(`${token.data.value} ${data.username}`, state.toask.success)
+          createToast(
+            `${token.data.value} ${data.username}`,
+            state.toask.success
+          );
         }
       } catch (error) {
         createToast("no hay acceso al servidor");
@@ -205,13 +210,16 @@ export default createStore({
       let productos = datos.productos;
       let cliente = datos.cliente_id;
       const timeformat = (value) => {
-         
         moment.locale("es");
-let fecha =`${value}`
-console.log(fecha[3])
+        let fecha = `${value}`;
+        let final = new Date(fecha);
 
+        final.setMonth(final.getMonth() + 1);
 
-        return moment(fecha).format("L")
+        return {
+          inicio: moment(fecha).format("L"),
+          final: moment(final).format("L"),
+        };
       };
       var doc = new jsPDF({
         format: "letter",
@@ -230,7 +238,7 @@ console.log(fecha[3])
       var img = new Image();
       img.src = "/img/fondo.jpg";
 
-      doc.addImage(img, "jpg", 3.5, 0, 209, 131);
+      //  doc.addImage(img, "jpg", 3.5, 0, 209, 131);
       doc.setFontSize(10);
       //headder factura
       let number = numeralFormat(datos.factura).format("000000");
@@ -238,10 +246,10 @@ console.log(fecha[3])
       doc.text(`Factura Nro:  ${number} `, 165, 34);
       doc.text(`Rif:    ${cliente.dni} `, 130, 36);
       doc.text(`Direccion:    ${cliente.direccion}`, 15, 40);
-      doc.text(`fecha:  ${timeformat(datos.createdAt)}`, 165, 40);
+      doc.text(`fecha:  ${timeformat(datos.createdAt).inicio}`, 165, 40);
       doc.text(`Telefono:    ${cliente.telefono}`, 15, 44);
-      doc.text(`vence:    ${timeformat(datos.createdAt)}`, 165, 44);
-      doc.text(`Condicion:   contado`, 120, 44);
+      doc.text(`vence:    ${timeformat(datos.createdAt).final}`, 165, 44);
+      //doc.text(`Condicion:   contado`, 120, 44);
 
       //body factura
 
@@ -325,7 +333,9 @@ console.log(fecha[3])
         prestamo: nota.prestamo,
       };
 
-      let { data } = await axios.post(`${state.api}/ventas`, newFactura, {headers:{xtoken:state.token}});
+      let { data } = await axios.post(`${state.api}/ventas`, newFactura, {
+        headers: { xtoken: state.token },
+      });
       createToast(data.value);
       if (data.status === true) {
         state.statusVenta = true;

@@ -4,7 +4,7 @@
 
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
-		<h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1>
+		<!-- <h1 class="h3 mb-0 text-gray-800">Panel de Administración</h1> -->
 	</div>
 
 	<!-- Content Row -->
@@ -55,11 +55,11 @@
 								<div class="col-auto">
 									<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"></div>
 								</div>
-								<div class="col">
+								<!-- <div class="col">
 									<div class="progress progress-sm mr-2">
 										<div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
 									</div>
-								</div>
+								</div> -->
 							</div>
 						</div>
 						<div class="col-auto">
@@ -89,7 +89,7 @@
 	</div>
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
-		<h1 class="h3 mb-0 text-gray-800">Configuración</h1>
+		<!-- <h1 class="h3 mb-0 text-gray-800">Configuración</h1> -->
 	</div>
 	<div class="row">
 		<div class="col-lg-6">
@@ -110,74 +110,11 @@
 					<div class="form-group">
 						<label>Usuario: <strong></strong></label>
 					</div>
-					<ul class="list-group">
-						<li class="list-group-item active">Cambiar Contraseña</li>
-						<form action="" method=" post" name="frmChangePass" id="frmChangePass" class="p-3">
-							<div class="form-group">
-								<label>Contraseña Actual</label>
-								<input type="password" name="actual" id="actual" placeholder="Clave Actual" required class="form-control">
-							</div>
-							<div class="form-group">
-								<label>Nueva Contraseña</label>
-								<input type="password" name="nueva" id="nueva" placeholder="Nueva Clave" required class="form-control">
-							</div>
-							<div class="form-group">
-								<label>Confirmar Contraseña</label>
-								<input type="password" name="confirmar" id="confirmar" placeholder="Confirmar clave" required class="form-control">
-							</div>
-							<div class="alertChangePass" style="display:none;">
-							</div>
-							<div>
-								<button type="submit" class="btn btn-primary btnChangePass">Cambiar Contraseña</button>
-							</div>
-						</form>
-					</ul>
+					
 				</div>
 			</div>
 		</div>
-			<div class="col-lg-6 d-none">
-				<div class="card">
-					<div class="card-header bg-primary text-white">
-						Datos de la Empresa
-					</div>
-					<div class="card-body">
-						<form action="" method="post" id="frmEmpresa" class="p-3">
-							<div class="form-group">
-								<label>Ruc:</label>
-								<input type="number" name="txtDni" value="<?php echo $dni; ?>" id="txtDni" placeholder="Dni de la Empresa" required class="form-control">
-							</div>
-							<div class="form-group">
-								<label>Nombre:</label>
-								<input type="text" name="txtNombre" class="form-control" value="<?php echo $nombre_empresa; ?>" id="txtNombre" placeholder="Nombre de la Empresa" required>
-							</div>
-							<div class="form-group">
-								<label>Razon Social:</label>
-								<input type="text" name="txtRSocial" class="form-control" value="<?php echo $razonSocial; ?>" id="txtRSocial" placeholder="Razon Social de la Empresa">
-							</div>
-							<div class="form-group">
-								<label>Teléfono:</label>
-								<input type="number" name="txtTelEmpresa" class="form-control" value="<?php echo $telEmpresa; ?>" id="txtTelEmpresa" placeholder="teléfono de la Empresa" required>
-							</div>
-							<div class="form-group">
-								<label>Correo Electrónico:</label>
-								<input type="email" name="txtEmailEmpresa" class="form-control" value="<?php echo $emailEmpresa; ?>" id="txtEmailEmpresa" placeholder="Correo de la Empresa" required>
-							</div>
-							<div class="form-group">
-								<label>Dirección:</label>
-								<input type="text" name="txtDirEmpresa" class="form-control" value="<?php echo $dirEmpresa; ?>" id="txtDirEmpresa" placeholder="Dirreción de la Empresa" required>
-							</div>
-							<div class="form-group">
-								<label>IGV (%):</label>
-								<input type="text" name="txtIgv" class="form-control" value="<?php echo $igv; ?>" id="txtIgv" placeholder="IGV de la Empresa" required>
-							</div>
-							<div>
-								<button type="submit" class="btn btn-primary btnChangePass"><i class="fas fa-save"></i> Guardar Datos</button>
-							</div>
-
-						</form>
-					</div>
-				</div>
-			</div>
+		
 	
 			<div class="col-lg-6">
 				<div class="card">
@@ -185,19 +122,16 @@
 						Datos de la Empresa
 					</div>
 					<div class="card-body">
-						<div class="p-3">
+						<div class="p-1">
 							<div class="form-group">
-								<strong>Ruc:</strong>
+								<strong>RIF:</strong>
 								<h6></h6>
 							</div>
 							<div class="form-group">
 								<strong>Nombre:</strong>
 								<h6></h6>
 							</div>
-							<div class="form-group">
-								<strong>Razon Social:</strong>
-								<h6></h6>
-							</div>
+							
 							<div class="form-group">
 								<strong>Teléfono:</strong>
 							
@@ -211,7 +145,7 @@
 								<h6></h6>
 							</div>
 							<div class="form-group">
-								<strong>IGV (%):</strong>
+								<strong>IVA (%):</strong>
 								<h6></h6>
 							</div>
 
